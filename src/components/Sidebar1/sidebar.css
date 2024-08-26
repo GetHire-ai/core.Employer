@@ -1,0 +1,14 @@
+.sidebar {
+    transition: width 0.3s ease, opacity 0.3s ease; 
+  }
+  
+  .sidebar-collapsed {
+    width: 80px; 
+    opacity: 0.7; 
+  }
+  
+  .sidebar-expanded {
+    width: 220px;
+    opacity: 1; 
+  }
+  
