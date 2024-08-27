@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import JobSidebar from "pages/Jobs/JobsApplication/JobSidebar";
@@ -74,12 +74,29 @@ const ShortStudentCard = ({ job, index, openModal }) => {
     setOpenIndex(index);
   };
 
+//  ---------------
+const dropdownRef = useRef(null);
+const handleClickOutside = (event) => {
+  if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    setOpenDropdownIndex(false);
+  }
+};
+useEffect(() => {
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+  };
+}, []);
+
+
+
   return (
     <>
       <div
         className={`flex justify-center items-start w-full p-4 rounded-lg ${
           index % 2 === 0 ? "bg-gray-100" : "bg-white"
         }`}
+        ref={dropdownRef}
       >
         <img
           src={job?.StudentId?.Image}

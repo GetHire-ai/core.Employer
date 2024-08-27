@@ -113,7 +113,8 @@ const Sidebar = () => {
         onMouseLeave={() => setIsCollapsed(true)}
       >
         <div className="flex justify-between w-full font-semibold text-2xl">
-          <div className="flex gap-1">
+          <div className="flex gap-1 cursor-pointer"
+           onClick={()=>Navigate('/')} >
             <Img
               className={`w-[120px] mb-3`}
               src={

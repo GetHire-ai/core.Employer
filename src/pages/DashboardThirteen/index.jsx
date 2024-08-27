@@ -744,10 +744,10 @@ const DashboardThirteenPage = () => {
             <div
               className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 cursor-pointer"
               // onClick={openModal4}
-              onClick={() => navigate("/jobs")}
+              onClick={() => navigate("/onboarding")}
             >
               <h1 className="text-xl font-semibold text-gray-800">
-                Shortlisted
+                OnBoarding
               </h1>
               <div className="flex items-center justify-between mt-4">
                 <div>

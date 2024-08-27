@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import { JobsApplicationEmployeeDeta } from "../JobsLinks";
 import { Button } from "components";
 import { IoIosArrowBack, IoIosArrowForward, IoIosStar } from "react-icons/io";
@@ -15,6 +15,7 @@ import { IoIosMail } from "react-icons/io";
 import { IoCallOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import HireSidebar from './../../Twentyseven/HireSidebar';
 
 function JobSidebar({ side1, openSideBar, selectedApplication }) {
   const navigate = useNavigate();
@@ -92,13 +93,97 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
     }
   };
 
+  // for call
+  const handleCall = (number) => {
+    window.location.href = `tel:${number}`; // Replace with the desired phone number
+  };
+  // for email
+  const [emailToggel , setEmailToggel] = useState(false);
+ const [messageToggel , setMessageToggel] = useState(false);
+
+  const handleToggle = () => {
+    setEmailToggel(!emailToggel);
+    setMessageToggel(false);
+  };
+  const handleMessageToggel = () => {
+    setMessageToggel(!messageToggel);
+    setEmailToggel(false);
+  }
+
+ const handleSendEmail = (val , email , name) => {
+    let subject = "", body = "";
+    // console.log("your sjhbjhsbjsbcjsbjh  " + val+"   " ,email +"  ", name)
+    if (val === 1) {
+      subject = "Regarding shortlisting";
+      body = `Dear ${name},\n\nHey! Congratulations for you shortlisting.\n\nAll the best for newx step. \n\nBest Regards,\n[Your Name]`;
+    }
+    if (val === 2) {
+      subject = "Your Custom Subject";
+      body = `Dear ${name},\n\nWe shedule your interview on [Day] [Time] on [plateform].\n\nAll the best for your interview\n\nBest Regards,\n[Your Name]`;
+    }
+    if (val === 3) {
+      subject = "Regarding Interview";
+      body = `Dear ${name},\n\nCongratulations !!\n\nYou are hired for this [position].\n\nAll the best for your future carrer\n\nBest Regards,\n[Your Name]`;
+    }
+  
+    const recipient = `${email}`; // Replace with the recipient's email
+    window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+  
+  const dropdownRef = useRef(null);
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setEmailToggel(false);
+      setMessageToggel(false);
+      setOpenDropdownIndex(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // for message send
+  const handleSendMessage = (val , number) => {
+    // console.log(" number is  " +number)
+    const phoneNumber = `${number}`; // Replace with the recipient's phone number, including country code
+    let message = " "; // Your message
+    // Set the message based on the value of `val`
+      switch (val) {
+        case 1:
+          message = "Heyy! \n\nYou got shortlisted in [Company name] for the role of [role].";
+          break;
+        case 2:
+          message = "Heyy! \n\nYour interview is scheduled for [day] at [time] on [web]. \n\nAll the best!";
+          break;
+        case 3:
+          message = "Heyy! \n\nCongratulations! \n\nYou got selected for the role of [role] at [Company name].";
+          break;
+        default:
+          message = "Hello! \n\nThis is a default message.";
+          break;
+      }
+      
+      // Encode the message for the URL
+      const encodedMessage = encodeURIComponent(message);
+      
+      // Redirect to WhatsApp with the encoded message
+      window.location.href = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+};
+
+
+
   return (
     <>
-      <div className="w-full">
+      <div className="w-full" >
         <div
           className="overlay"
           style={side1 ? { right: 0 } : { right: "100%" }}
           onClick={openSideBar}
+          ref={dropdownRef}
         ></div>
 
         <div
@@ -112,7 +197,7 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
             <img src="/images/sidebar-arrow.svg" alt="" />
           </div>
 
-          <div className="p-[27px] flex flex-col lg:flex-row gap-[20px] lg:gap-0 justify-between items-center w-full">
+          <div className="p-[27px] flex flex-col lg:flex-row gap-[20px] lg:gap-0 justify-between items-center w-full" ref={dropdownRef}>
             <div className="flex gap-[6px]">
               <div className="flex flex-col justify-center items-center">
                 <img
@@ -139,22 +224,85 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
                 <p className="text-[12px] font-[400] text-[#7a7a7a]">
                   Design Team. UI Designer
                 </p>
-                <div className="flex gap-2 mt-2">
+                <div className=" relative flex gap-2 mt-2">
                   <button
                     className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-full shadow-lg hover:from-blue-500 hover:to-blue-600 transition-transform transform hover:scale-105"
-                    // onClick={}
+                    onClick={()=>{handleMessageToggel()}}
                   >
                     <SiGooglemessages className="text-[24px]" />
                   </button>
+                    {messageToggel && (
+                        <div className="absolute mt-8 ml-5 z-50 w-48 p-2 bg-gradient-to-tr from-blue-100 to-white backdrop-blur-lg bg-opacity-50 border border-white border-opacity-30 rounded-2xl shadow-2xl">
+                          <ul className="space-y-2">
+                            <li className="group flex items-center justify-between px-4 py-3 text-sm font-semibold text-gray-800 bg-white bg-opacity-20 rounded-lg shadow-inner cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-blue-500 hover:text-white hover:bg-opacity-80"
+                              onClick={()=>{handleSendMessage(1 , selectedApplication?.StudentId?.Number)}}
+                            >
+                              <span className="group-hover:underline">Shortlist</span>
+                              <svg className="w-5 h-5 text-blue-400 group-hover:text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                              </svg>
+                            </li>
+                            <li className="group flex items-center justify-between px-4 py-3 text-sm font-semibold text-gray-800 bg-white bg-opacity-20 rounded-lg shadow-inner cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-blue-500 hover:text-white hover:bg-opacity-80"
+                              onClick={()=>{handleSendMessage(2 , selectedApplication?.StudentId?.Number)}}
+                            >
+                              <span className="group-hover:underline">Interview Shedule</span>
+                              <svg className="w-5 h-5 text-blue-400 group-hover:text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                              </svg>
+                            </li>
+                            <li className="group flex items-center justify-between px-4 py-3 text-sm font-semibold text-gray-800 bg-white bg-opacity-20 rounded-lg shadow-inner cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-blue-500 hover:text-white hover:bg-opacity-80"
+                              onClick={()=>{handleSendMessage(3 , selectedApplication?.StudentId?.Number)}}
+                            >
+                              <span className="group-hover:underline">Hire</span>
+                              <svg className="w-5 h-5 text-blue-400 group-hover:text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                              </svg>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+
+
                   <button
                     className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-full shadow-lg hover:from-blue-500 hover:to-blue-600 transition-transform transform hover:scale-105"
-                    // onClick={}
+                    onClick={() => handleToggle()}
                   >
                     <IoIosMail className="text-[24px]" />
                   </button>
+                    {emailToggel && (
+                      <div className="absolute mt-8 ml-10 z-50 w-48 p-2 bg-gradient-to-tr from-blue-100 to-white backdrop-blur-lg bg-opacity-50 border border-white border-opacity-30 rounded-2xl shadow-2xl">
+                        <ul className="space-y-2">
+                          <li className="group flex items-center justify-between px-4 py-3 text-sm font-semibold text-gray-800 bg-white bg-opacity-20 rounded-lg shadow-inner cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-blue-500 hover:text-white hover:bg-opacity-80"
+                            onClick={(()=>(handleSendEmail(1 , selectedApplication?.StudentId?.Email , selectedApplication?.StudentId?.Name)))}
+                          >
+                            <span className="group-hover:underline">Shortlist</span>
+                            <svg className="w-5 h-5 text-blue-400 group-hover:text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                          </li>
+                          <li className="group flex items-center justify-between px-4 py-3 text-sm font-semibold text-gray-800 bg-white bg-opacity-20 rounded-lg shadow-inner cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-blue-500 hover:text-white hover:bg-opacity-80"
+                            onClick={(()=>(handleSendEmail(2, selectedApplication?.StudentId?.Email , selectedApplication?.StudentId?.Name)))}
+                          >
+                            <span className="group-hover:underline">Interview Shedule</span>
+                            <svg className="w-5 h-5 text-blue-400 group-hover:text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                          </li>
+                          <li className="group flex items-center justify-between px-4 py-3 text-sm font-semibold text-gray-800 bg-white bg-opacity-20 rounded-lg shadow-inner cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-blue-500 hover:text-white hover:bg-opacity-80"
+                            onClick={(()=>(handleSendEmail(3, selectedApplication?.StudentId?.Email , selectedApplication?.StudentId?.Name)))}
+                          >
+                            <span className="group-hover:underline">Hire</span>
+                            <svg className="w-5 h-5 text-blue-400 group-hover:text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+
                   <button
                     className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-full shadow-lg hover:from-blue-500 hover:to-blue-600 transition-transform transform hover:scale-105"
-                    // onClick={}
+                    onClick={()=>handleCall(selectedApplication?.StudentId?.Number)}
                   >
                     <IoCallOutline className="text-[24px]" />
                   </button>
@@ -433,7 +581,7 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
               <div>
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.15.349/build/pdf.worker.min.js">
                   <Viewer
-                    fileUrl={selectedApplication?.Custom_resume}
+                    fileUrl= {selectedApplication?.Custom_resume || "https://www.google.com/imgres?q=an%20empty%20resume%20template%20url&imgurl=https%3A%2F%2Fwww.visualcv.com%2Fstatic%2Fe13418f335d7a11df6a860747db880a7%2Fa12ab%2FBlank_Resume_Template_-_ATS.png&imgrefurl=https%3A%2F%2Fwww.visualcv.com%2Fresume-templates%2Fblank-resume-templates%2F&docid=y59Y-0IP8M8gpM&tbnid=rdawpfL51Ys7AM&vet=12ahUKEwis-KWSuJOIAxWBwTgGHa8CJsoQM3oECGUQAA..i&w=760&h=704&hcb=2&ved=2ahUKEwis-KWSuJOIAxWBwTgGHa8CJsoQM3oECGUQAA" }
                     plugins={[defaultLayoutPlugin]}
                   />
                 </Worker>

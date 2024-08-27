@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Button, Img, Text } from "components";
 import { useNavigate, Link } from "react-router-dom";
 import { GetApi, DeleteApi } from "Api/Api_Calling";
@@ -128,6 +128,21 @@ const DashboardPage = () => {
     console.log("Navigate");
     navigate(`/jobsSummary/${job?._id}`);
   };
+
+  // for closing of the "setOpenIndex"
+  const dropdownRef = useRef(null);
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setOpenIndex(false);
+    }
+  };
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
 
   return (
     <div className="container mx-auto">
@@ -444,7 +459,7 @@ const DashboardPage = () => {
               <div className="flex flex-col gap-6 justify-center items-start w-3/4 p-4 relative">
                 {openIndex === index && (
                   <div className="absolute right-[-1rem] top-8 bg-white shadow-xl flex flex-col items-start justify-center p-2 rounded-md w-[122px] z-10">
-                    <div className="flex flex-col items-start justify-center w-full">
+                    <div className="flex flex-col items-start justify-center w-full" ref={dropdownRef}>
                       <div
                         className="text-sm font-medium text-black cursor-pointer hover:text-blue-500 transition duration-150"
                         onClick={() => ViewJob(job)}
@@ -469,16 +484,16 @@ const DashboardPage = () => {
                       )}
                       <div
                         className="text-sm font-medium text-black cursor-pointer hover:text-blue-500 transition duration-150 mt-1"
-                        onClick={() => navigate("/settings")}
+                        onClick={() => {navigate("/settings")}}
                       >
                         Setting
                       </div>
-                      <div
+                      {/* <div
                         className="text-sm font-medium text-black cursor-pointer hover:text-blue-500 transition duration-150 mt-1"
                         onClick={() => alert("Don't know where to route")}
                       >
                         Report
-                      </div>
+                      </div> */}
                       {job.JobActive && (
                         <div
                           className="text-sm font-medium text-black cursor-pointer hover:text-blue-500 transition duration-150 mt-1"

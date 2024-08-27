@@ -109,8 +109,8 @@ const FilterScreen = ({ setFilterData }) => {
           <Typography>Application Filters</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Stack direction="row" spacing={2} mb={1}>
-            <Button
+          {/* <Stack direction="row" spacing={2} mb={1}>
+            <button
               size="small"
               variant="outlined"
               color="error"
@@ -124,9 +124,10 @@ const FilterScreen = ({ setFilterData }) => {
                   experience: { min: 0, max: 1 },
                 })
               }
+              className="text-red bg-white hover:bg-red-100 rounded-lg"
             >
               Reset Filters
-            </Button>
+            </button>
             <Button
               size="small"
               variant="contained"
@@ -135,13 +136,14 @@ const FilterScreen = ({ setFilterData }) => {
               onClick={() => {
                 setFilterData(data);
               }}
+              className=" text-blue bg-white hover:bg-blue-100 rounded-lg"
             >
               Apply Filters
             </Button>
-          </Stack>
+          </Stack> */}
           <Box mb={1}>
             <Typography variant="subtitle1">Stages</Typography>
-            <Stack display="flex" flexDirection="column">
+            {/* <Stack display="flex" flexDirection="column">
               {stages.map((stage) => (
                 <FormControlLabel
                   key={stage}
@@ -155,7 +157,7 @@ const FilterScreen = ({ setFilterData }) => {
                   label={stage}
                 />
               ))}
-            </Stack>
+            </Stack> */}
           </Box>
           <Stack mb={1}>
             <TextField
@@ -219,7 +221,7 @@ const FilterScreen = ({ setFilterData }) => {
             />
           </Stack>
           <Stack direction="row" spacing={2} mb={1}>
-            <Button
+            <button
               size="small"
               variant="outlined"
               color="error"
@@ -233,9 +235,10 @@ const FilterScreen = ({ setFilterData }) => {
                   experience: { min: 0, max: 1 },
                 })
               }
+              className=" text-xl text-blue-500 "
             >
               Reset Filters
-            </Button>
+            </button>
             <Button
               size="small"
               variant="contained"
