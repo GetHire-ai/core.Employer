@@ -408,7 +408,7 @@ const Sidebar = () => {
                >
                 <i class="fa-solid fa-wallet mr-2"></i>Add Funds
               </button> */}
-              <button
+              {/* <button
                 class="btn relative inline-flex items-center justify-start overflow-hidden  font-medium transition-all bg-indigo-100 rounded hover:bg-white group py-1.5 px-2.5"
                 onClick={() => Navigate("/wallet")}
               >
@@ -420,7 +420,7 @@ const Sidebar = () => {
                     className="ml-2 mt-1 transition-colors text-indigo-100 duration-200 ease-in-out group-hover:text-white"
                   />
                 </span>
-              </button>
+              </button> */}
             </div>
           )}
           {!isCollapsed && (

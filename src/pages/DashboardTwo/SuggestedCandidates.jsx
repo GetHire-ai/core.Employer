@@ -140,7 +140,7 @@ const SuggestedCandidates = ({ job, candidates }) => {
               </ul>
             </div>
             <div className="flex flex-col gap-2">
-              <span className="text-sm text-gray-600">Status : {candidate?.applicationStatus}</span>
+              <span className=" flex text-[15px] gap-2 text-gray-600">Status : <p className=" text-blue-500">{candidate?.applicationStatus}</p></span>
               <div>
                 <button
                   className="px-4 py-2 hover:bg-blue-200 text-blue-500 rounded-2xl font-medium  transition-colors"

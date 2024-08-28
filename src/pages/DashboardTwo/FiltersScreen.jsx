@@ -220,12 +220,12 @@ const FilterScreen = ({ setFilterData }) => {
               max={10}
             />
           </Stack>
-          <Stack direction="row" spacing={2} mb={1}>
+          <Stack direction="row" spacing={2} mb={1} className=" mt-2">
             <button
               size="small"
               variant="outlined"
               color="error"
-              style={{ fontSize: "12px" }}
+              // style={{ fontSize: "12px" }}
               onClick={() =>
                 setData({
                   name: "",
@@ -235,21 +235,22 @@ const FilterScreen = ({ setFilterData }) => {
                   experience: { min: 0, max: 1 },
                 })
               }
-              className=" text-xl text-blue-500 "
+              className=" text-[15px] text-blue-500 hover:underline duration-300 "
             >
               Reset Filters
             </button>
-            <Button
+            <button
               size="small"
               variant="contained"
               color="success"
-              style={{ fontSize: "12px" }}
+              // style={{ fontSize: "15px" }}
               onClick={() => {
                 setFilterData(data);
               }}
+              className=" text-[15px] hover:underline duration-300"
             >
               Apply Filters
-            </Button>
+            </button>
           </Stack>
         </AccordionDetails>
       </Accordion>

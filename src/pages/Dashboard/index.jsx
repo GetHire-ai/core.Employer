@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Button, Img, Text } from "components";
 import { useNavigate, Link } from "react-router-dom";
-import { GetApi, DeleteApi } from "Api/Api_Calling";
+import { GetApi, DeleteApi ,PostApi } from "Api/Api_Calling";
 import moment from "moment";
 import "./modal.css";
 import {
@@ -142,6 +142,33 @@ const DashboardPage = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+
+  // for linkedin post ------------------------------------------
+//   const postOnLinkedIn = async (companyName , jobRole , min_ctc,max_ctc, min_exp,max_exp , location  ) => {
+//     console.log("postOnLinkedIn" , companyName , jobRole , min_ctc,max_ctc, min_exp,max_exp , location );
+//     try {
+//       const response = await PostApi('/postOnLinkedIn', { 
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ companyName, jobRole, min_ctc, max_ctc, min_exp, max_exp, location }),
+//       });
+  
+//       const data = await response.json();
+//       if (response.ok) {
+//         console.log("Post successful:", data);
+//         alert('Post Successfully done');
+//       } else {
+//         console.error("Post failed:", data.message);
+//         alert("Failed to post, sorry for this... we will be right back soon.");
+//       }
+//     } catch (error) {
+//       console.error("Error occurred while posting:", error);
+//       alert("Failed to post, sorry for this... we will be right back soon.");
+//     }
+// };
 
 
   return (
@@ -438,7 +465,9 @@ const DashboardPage = () => {
                 <div className="mt-3">
                   <p className="text-gray-600 text-sm">Share On:</p>
                   <div className="flex gap-4 mt-3">
-                    <button className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300">
+                    <button className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300"
+                      // onClick={()=>(postOnLinkedIn("flipkart" , job?.positionName , 3 ,6 , job?.minExp , job?.maxExp , job?.location   ))}
+                     >
                       <i className="fa-brands fa-linkedin"></i>
                     </button>
                     <button className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300">
