@@ -269,6 +269,7 @@ const DashboardPage = () => {
                   </div>
                 </div>
               </div>
+
               <div className="flex flex-col gap-6 justify-center items-start w-3/4 p-4 relative">
                 {openIndex === index && (
                   <div className="absolute right-[-1rem] top-8 bg-white shadow-xl flex flex-col items-start justify-center p-2 rounded-md w-[122px] z-10">
@@ -318,6 +319,7 @@ const DashboardPage = () => {
                     </div>
                   </div>
                 )}
+
                 <div className="w-full flex justify-between items-start mb-5">
                   <h2 className="text-lg font-semibold text-gray-900">
                     Applications
@@ -333,7 +335,8 @@ const DashboardPage = () => {
                     />
                   </div>
                 </div>
-                <div className="flex justify-between w-full text-gray-600 mb-5 h-14  divide-x divide-gray-300">
+                
+                {/* <div className="flex justify-between w-full text-gray-600 mb-5 h-14  divide-x divide-gray-300">
                   <div
                     className="cursor-pointer -mr-7 px-6"
                     // onClick={() => navigate(`/jobsApplication/${job._id}`)}
@@ -358,8 +361,80 @@ const DashboardPage = () => {
                     </span>
                     <h2 className="mt-2">Hired</h2>
                   </div>
-                </div>
+                </div> */}
+                   {/* <div className="flex justify-between w-full text-gray-600 mb-5 h-14">
+                      <div
+                        className="flex flex-col items-center cursor-pointer px-6"
+                        onClick={() => navigate(`/jobsApplicationManager2/${job._id}`)}
+                      >
+                        <span className="text-2xl font-semibold text-orange-500">
+                          {job?.totalApplicationCount}
+                        </span>
+                        <h2 className="mt-1 border-t-2 border-orange-500 w-full text-center">
+                          Applications
+                        </h2>
+                      </div>
+                      <div className="flex flex-col items-center px-6">
+                        <span className="text-2xl font-semibold text-blue-500">
+                          {job?.shortlistedApplicationCount}
+                        </span>
+                        <h2 className="mt-1 border-t-2 border-blue-500 w-full text-center">
+                          In Process
+                        </h2>
+                      </div>
+                      <div className="flex flex-col items-center px-6">
+                        <span className="text-2xl font-semibold text-green-500">
+                          {job?.selectedStudentCount}
+                        </span>
+                        <h2 className="mt-1 border-t-2 border-green-500 w-full text-center">
+                          Hired
+                        </h2>
+                      </div>
+                    </div> */}
+                  {/* <div className="flex justify-between w-full text-gray-600 mb-5 h-14">
+                    <div
+                      className="flex flex-col items-center cursor-pointer px-6"
+                      onClick={() => navigate(`/jobsApplicationManager2/${job._id}`)}
+                      >
+                      <span className="text-xl font-semibold">{job?.totalApplicationCount}</span>
+                      <div className="w-full border-t-2 border-orange-500 mt-1" />
+                      <h2 className="text-sm mt-1">Applications</h2>
+                    </div>
+                    <div className="flex flex-col items-center px-6">
+                      <span className="text-xl font-semibold">{job?.shortlistedApplicationCount}</span>
+                      <div className="w-full border-t-2 border-blue-500 mt-1" />
+                      <h2 className="text-sm mt-1">In Process</h2>
+                    </div>
+                    <div className="flex flex-col items-center px-6">
+                      <span className="text-xl font-semibold">{job?.selectedStudentCount}</span>
+                      <div className="w-full border-t-2 border-green-500 mt-1" />
+                      <h2 className="text-sm mt-1">Hired</h2>
+                    </div>
+                  </div> */}
+                  <div className="flex justify-between w-full text-gray-600 mb-5">
+                      <div
+                        className="flex flex-col items-center cursor-pointer px-6"
+                        onClick={() => navigate(`/jobsApplicationManager2/${job._id}`)}
+                      >
+                        <span className="text-xl font-medium">{job?.totalApplicationCount}</span>
+                        <div className="w-32 border-t-2 border-orange-500 mt-2" />
+                        <h2 className="text-sm mt-4">Applications</h2>
+                      </div>
+                      <div className="flex flex-col items-center px-6">
+                        <span className="text-xl font-medium">{job?.shortlistedApplicationCount}</span>
+                        <div className="w-32 border-t-2 border-blue-500 mt-2" />
+                        <h2 className="text-sm mt-4">In Process</h2>
+                      </div>
+                      <div className="flex flex-col items-center px-6">
+                        <span className="text-xl font-medium">{job?.selectedStudentCount}</span>
+                        <div className="w-32 border-t-2 border-green-500 mt-2" />
+                        <h2 className="text-sm mt-4">Hired</h2>
+                      </div>
+                    </div>
 
+
+
+             
                 <div className="w-full flex justify-end items-center gap-4">
                   {!job?.JobActive && (
                     <div className="text-gray-400 px-5 border-b border-gray-600 border-dashed">

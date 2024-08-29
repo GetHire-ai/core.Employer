@@ -107,10 +107,14 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
   const handleToggle = () => {
     setEmailToggel(!emailToggel);
     setMessageToggel(false);
+    setShowQRCode(false);
+    setOpenDropdownIndex(false);
   };
   const handleMessageToggel = () => {
     setMessageToggel(!messageToggel);
     setEmailToggel(false);
+    setOpenDropdownIndex(false);
+    setShowQRCode(false);
   }
 
  const handleSendEmail = (val , email , name) => {
@@ -138,7 +142,7 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setEmailToggel(false);
       setMessageToggel(false);
-      setOpenDropdownIndex(false);
+      // setOpenDropdownIndex(false);
       setShowQRCode(false);
     }
   };
@@ -184,7 +188,11 @@ const [showQRCode, setShowQRCode] = useState(false);
 const [phoneNumber , setPhoneNumber] = useState('+1234567890'); // Replace with the desired phone number
 
 const handleButtonClick = () => {
-  setShowQRCode(!showQRCode);
+  setShowQRCode(!showQRCode); 
+  setEmailToggel(false);
+  setMessageToggel(false);
+  setOpenDropdownIndex(false);
+
 };
 
   return (
@@ -194,7 +202,7 @@ const handleButtonClick = () => {
           className="overlay"
           style={side1 ? { right: 0 } : { right: "100%" }}
           onClick={openSideBar}
-          ref={dropdownRef}
+          // ref={dropdownRef}
         ></div>
 
         <div
@@ -373,7 +381,7 @@ const handleButtonClick = () => {
                 return (
                   <>
                     <Button
-                      onClick={() => setButtonN(e?.name)}
+                      onClick={() => {setButtonN(e?.name) ; setOpenDropdownIndex(false); }}
                       key={e?.name}
                       className={`${
                         buttonN === e?.name
