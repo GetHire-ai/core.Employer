@@ -4,6 +4,7 @@ import { skills, positions } from "./Suggestion";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
   Select,
+  Collapse,
   FormLabel,
   MenuItem,
   Checkbox,
@@ -18,6 +19,8 @@ import {
   FormHelperText,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { PostApi } from "Api/Api_Calling";
@@ -297,7 +300,7 @@ const JobCreateManual = () => {
             <i className="fa-solid fa-plus text-md"></i>
           </IconButton>
           <IconButton onClick={() => handleRemoveCategory(category)}>
-          <DeleteIcon />
+            <DeleteIcon />
           </IconButton>
         </div>
       </div>
