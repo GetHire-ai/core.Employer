@@ -43,6 +43,7 @@ import Login from "pages/Auth/Login";
 import Signup from "pages/Auth/Signup";
 import Community from "./pages/Community/index";
 import JobCreateManual from "pages/Jobs/JobsCreate/JobCreateManual";
+import JobEdit from "pages/Jobs/JobsCreate/EditAJobWithManual";
 import JobCreateManualId from "pages/Jobs/JobsCreate/JobCreateManualId";
 import Chat from "./Chat";
 import FirstPage from "pages/Auth/FirstPage";
@@ -142,6 +143,7 @@ const ProjectRoutes = () => {
                 <Route path="/jobs" element={<Dashboard />} />
                 <Route path="/all-applications" element={<AllApplications />} />
                 <Route path="/jobcreatemanual" element={<JobCreateManual />} />
+                <Route path="/edit-job" element={<JobEdit />} />
                 <Route
                   path="/jobcreatemanual/:id"
                   element={<JobCreateManualId />}

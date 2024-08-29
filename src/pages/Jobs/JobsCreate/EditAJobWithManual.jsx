@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Img, Text } from "components";
 import { skills, positions } from "./Suggestion";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useLocation } from "react-router-dom";
 import {
   Select,
   FormLabel,
@@ -17,9 +17,9 @@ import {
   FormControl,
   FormHelperText,
 } from "@mui/material";
-import styled from "@emotion/styled";
+import { SelectBox } from "components/SelectBox";
 import axios from "axios";
-import { PostApi } from "Api/Api_Calling";
+import { PostApi, PutApi } from "Api/Api_Calling";
 import { toast } from "react-toastify";
 
 const noticePeriodOptions = ["15 Days", "30 Days", "2 Months", "3 Months"];
@@ -59,32 +59,6 @@ const englishLevelOptions = ["noEnglish", "basicEnglish", "goodEnglish"];
 
 const experienceOptions = ["any", "experiencedOnly", "fresherOnly"];
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-const CustomSelect = styled(Select)(({ theme }) => ({
-  "& .MuiSelect-select": {
-    padding: "8px 16px", // Adjust padding if necessary
-    fontSize: "16px", // Match your text size
-  },
-  "& .MuiOutlinedInput-notchedOutline": {
-    borderColor: "#5956e9", // Border color
-  },
-  "&:hover .MuiOutlinedInput-notchedOutline": {
-    borderColor: "#5956e9", // Border color on hover
-  },
-  "& .MuiSvgIcon-root": {
-    color: "#5956e9", // Arrow color
-  },
-}));
-
 const options = [
   "Technical",
   "Behavioral",
@@ -94,10 +68,12 @@ const options = [
   "Situational",
 ];
 
-const JobCreateManual = () => {
+const EditJob = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { state } = location;
   const listRef = useRef(null);
   const skillListRef = useRef(null);
-  const navigate = useNavigate();
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
   const [allowDirectContact, setAllowDirectContact] = useState(false);
@@ -119,10 +95,7 @@ const JobCreateManual = () => {
     currency: "INR",
     skillsRequired: [],
     description: "",
-    rounds: [
-      { Round: 1, Assessment: "Skill Assessment" },
-      { Round: 2, Assessment: "AI Based Video" },
-    ],
+    rounds: [],
     numOfDays: "",
     shift: "",
     jobFrequency: "",
@@ -189,23 +162,31 @@ const JobCreateManual = () => {
   const predefinedSkills = skills;
   const predefinedPositionNames = positions;
   const validate = () => {
-    if (JobData.type === "job") {
-      if (
-        JobData?.positionName === "" ||
-        JobData?.skillsRequired.length === 0 ||
-        JobData?.jobType === "" ||
-        JobData?.shift === "" ||
-        JobData?.minEducation === "" ||
-        JobData?.englishLevel === "" ||
-        JobData?.expRequired === "" ||
-        JobData?.openings === ""
-      ) {
-        setFormSubmitted(true);
-        toast.error("Please Fill Mandatory Field !", { autoClose: 1000 });
-        return;
-      }
+    const requiredFields = {
+      positionName: JobData.positionName,
+      skillsRequired: JobData.skillsRequired.length,
+      jobType: JobData.jobType,
+      shift: JobData.shift,
+      minEducation: JobData.minEducation,
+      englishLevel: JobData.englishLevel,
+      expRequired: JobData.expRequired,
+      openings: JobData.openings,
+    };
+
+    const emptyFields = Object.entries(requiredFields)
+      .filter(([key, value]) =>
+        typeof value === "string" ? value.trim() === "" : value === 0
+      )
+      .map(([key]) => key);
+
+    if (emptyFields.length > 0) {
+      setFormSubmitted(true);
+      const message = `Please fill the following mandatory fields: ${emptyFields.join(
+        ", "
+      )}!`;
+      toast.error(message, { autoClose: 1000 });
+      return;
     }
-    CreateNewJob();
   };
 
   const handleQuestionChange = (topic, index, newValue) => {
@@ -315,9 +296,14 @@ const JobCreateManual = () => {
   );
 
   const CreateNewJob = async () => {
+    validate();
     try {
       setLoading(true);
-      const responce = await PostApi("api/CompanyRoutes/CreateJob", JobData);
+      
+      const responce = await PutApi(
+        `api/CompanyRoutes/UpdateJob/${state.job._id}`,
+        JobData
+      );
       toast.success(responce?.data?.message, { autoClose: 1000 });
       navigate("/jobs");
     } catch (error) {
@@ -339,7 +325,6 @@ const JobCreateManual = () => {
       }
     }
   };
-  //
   const chooseDateOptionsList = [
     { label: "Skill Assessment", value: "Skill Assessment" },
     { label: "AI Based Video", value: "AI Based Video" },
@@ -450,7 +435,6 @@ const JobCreateManual = () => {
     updatedRounds[index].Assessment = value;
     setRounds(updatedRounds);
     setJobData({ ...JobData, rounds: updatedRounds });
-    console.log(JobData.rounds);
   };
   const addSkill = (skill = skillInput) => {
     if (skill.trim() !== "") {
@@ -525,6 +509,17 @@ const JobCreateManual = () => {
   };
   const companydataString = localStorage.getItem("companydata");
   const companydata = JSON.parse(companydataString);
+
+  useEffect(() => {
+    if (state === null) {
+      navigate("/jobs");
+    }
+    setJobData((prev) => ({
+      ...prev,
+      ...state.job,
+    }));
+    console.log(state.job)
+  }, [state]);
   return (
     <div className="container mx-auto">
       {loading && (
@@ -556,7 +551,7 @@ const JobCreateManual = () => {
       >
         <div className="flex justify-between items-center">
           <p className="text-[32px] text-center text-black font-[600] flex-grow">
-            Create a Job With Manual
+            Edit a Job 
           </p>
         </div>
         <div className="max-w-4xl mx-auto p-6 bg-white  rounded-md">
@@ -1371,7 +1366,7 @@ const JobCreateManual = () => {
                         onChange={(event, newValue) =>
                           setJobData((prev) => ({
                             ...prev,
-                            expRequired: newValue.value,
+                            expRequired: newValue,
                           }))
                         }
                         renderInput={(params) => (
@@ -2095,56 +2090,24 @@ const JobCreateManual = () => {
                           {`Round ${index + 1}`}
                         </p>
                         <div className="relative ">
-                        {round.Assessment !== "" &&(
-                          <p className="text-[16px] w-[auto] font-[500] border-[1px] text-[#8d8d8d] border-black py-[4px] px-[11px] rounded-[8px]">
-                          {round.Assessment}
-                        </p>
-                        )}
-                        {round.Assessment === "" &&(<FormControl variant="outlined" className="w-[260px]">
-                            <InputLabel
-                              id={`select-label-${index}`}
-                              className="text-[#5956e9]"
-                            >
-                              Select
-                            </InputLabel>
-                            <CustomSelect
-                              labelId={`select-label-${index}`}
-                              value={round.Assessment || ""}
-                              onChange={(event) =>
-                                handleRoundTypeChange(index, event.target.value)
-                              }
-                              label="Select"
-                              className="font-medium text-[16px] rounded-lg"
-                              MenuProps={{
-                                PaperProps: {
-                                  sx: {
-                                    borderRadius: "0.5rem",
-                                    "& .MuiMenuItem-root": {
-                                      "&:hover": {
-                                        backgroundColor: "#f0f0f0",
-                                      },
-                                    },
-                                  },
-                                },
-                              }}
-                            >
-                              {chooseDateOptionsList
-                                .filter(
-                                  (option) =>
-                                    !rounds.some(
-                                      (r) => r.Assessment === option.value
-                                    )
+                          <SelectBox
+                            className="border border-[#5956e9] bg-white w-[260px] font-[500] text-[16px]"
+                            placeholderClassName="text-[#5956e9]"
+                            isMulti={false}
+                            name={`group-${index}`}
+                            options={chooseDateOptionsList.filter(
+                              (option) =>
+                                !rounds.some(
+                                  (r) => r.Assessment === option.value
                                 )
-                                .map((option) => (
-                                  <MenuItem
-                                    key={option.value}
-                                    value={option.value}
-                                  >
-                                    {option.label}
-                                  </MenuItem>
-                                ))}
-                            </CustomSelect>
-                          </FormControl>)}
+                            )}
+                            isSearchable={false}
+                            shape="round"
+                            size="xs"
+                            onChange={(value) =>
+                              handleRoundTypeChange(index, value)
+                            }
+                          />
                         </div>
                         {round.Assessment === "Skill Assessment" && (
                           <button
@@ -2248,7 +2211,7 @@ const JobCreateManual = () => {
                             <thead className="bg-gray-50">
                               <tr>
                                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-800 tracking-wider">
-                                  Skills
+                                  Title
                                 </th>
                                 <th className="px-6 py-3 text-center text-sm font-semibold text-gray-800 tracking-wider">
                                   Must-have
@@ -2262,8 +2225,8 @@ const JobCreateManual = () => {
                             <tbody className="bg-white divide-y divide-gray-200">
                               {assessmentSkills.map((skill, index) => (
                                 <tr key={index}>
-                                  <td className="px-2 py-4 text-gray-500 flex items-center gap-2">
-                                    {/* <select
+                                  <td className="px-2 py-4 text-gray-500">
+                                    <select
                                       value={skill.type}
                                       onChange={(e) => {
                                         const newSkills = [...assessmentSkills];
@@ -2278,7 +2241,7 @@ const JobCreateManual = () => {
                                     >
                                       <option value="">Select</option>
                                       <option value="skill">Skill</option>
-                                      <option value="experience">
+                                      {/* <option value="experience">
                                         Experience
                                       </option>
                                       <option value="education">
@@ -2286,11 +2249,8 @@ const JobCreateManual = () => {
                                       </option>
                                       <option value="communication">
                                         Communication
-                                      </option>
-                                    </select> */}
-                                    {/* <span className="">
-                                    {skill.type} :
-                                    </span> */}
+                                      </option> */}
+                                    </select>
                                     {skill?.type === "skill" && (
                                       <>
                                         {skill.skill}
@@ -2602,54 +2562,54 @@ const JobCreateManual = () => {
                               ))}
                             </Select>
                           </FormControl>
-                          <div className="flex justify-end items-center">
-                            <button
-                              className="bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300"
-                              onClick={async () => {
-                                setJDLoading(true);
-                                if (!JobData || JobData.positionName === "") {
-                                  toast.error("Job title is required", {
-                                    autoClose: 1000,
-                                  });
-                                  return;
-                                }
-                                try {
-                                  const response = await fetch(
-                                    "https://shining-needed-bug.ngrok-free.app/generate-questions",
-                                    {
-                                      method: "POST",
-                                      headers: {
-                                        "Content-Type": "application/json",
-                                        Accept: "application/json",
-                                      },
-                                      body: JSON.stringify({
-                                        jobTitle: JobData.positionName,
-                                        experience: videoInterview?.level,
-                                        categories: videoInterview?.topic,
-                                      }),
-                                    }
-                                  );
-                                  const responseData = await response.json();
-                                  const formattedQuestions = Object.keys(
-                                    responseData
-                                  ).map((key) => ({
-                                    topic: key,
-                                    questions: responseData[key],
-                                  }));
-                                  setJobData((prev) => ({
-                                    ...prev,
-                                    videoQuestions: formattedQuestions,
-                                  }));
-                                } catch (error) {
-                                  // Handle error
-                                } finally {
-                                  setJDLoading(false);
-                                }
-                              }}
-                            >
-                              Generate
-                            </button>
-                          </div>
+                        </div>
+                        <div className="flex justify-end mt-6">
+                          <button
+                            className="bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300"
+                            onClick={async () => {
+                              setJDLoading(true);
+                              if (!JobData || JobData.positionName === "") {
+                                toast.error("Job title is required", {
+                                  autoClose: 1000,
+                                });
+                                return;
+                              }
+                              try {
+                                const response = await fetch(
+                                  "https://shining-needed-bug.ngrok-free.app/generate-questions",
+                                  {
+                                    method: "POST",
+                                    headers: {
+                                      "Content-Type": "application/json",
+                                      Accept: "application/json",
+                                    },
+                                    body: JSON.stringify({
+                                      jobTitle: JobData.positionName,
+                                      experience: videoInterview?.level,
+                                      categories: videoInterview?.topic,
+                                    }),
+                                  }
+                                );
+                                const responseData = await response.json();
+                                const formattedQuestions = Object.keys(
+                                  responseData
+                                ).map((key) => ({
+                                  topic: key,
+                                  questions: responseData[key],
+                                }));
+                                setJobData((prev) => ({
+                                  ...prev,
+                                  videoQuestions: formattedQuestions,
+                                }));
+                              } catch (error) {
+                                // Handle error
+                              } finally {
+                                setJDLoading(false);
+                              }
+                            }}
+                          >
+                            Generate
+                          </button>
                         </div>
                         {JobData.videoQuestions && (
                           <div className="mt-6">
@@ -2874,15 +2834,15 @@ const JobCreateManual = () => {
               </div>
             </div>
           </div>
-          {/* <div className="mb-4">
+          <div className="mb-4">
             <label className="mb-2 block text-xl font-semibold text-gray-700 mt-5">
               Onboarding
             </label>
             <div className="p-4 border border-gray-300 rounded-md mb-4"></div>
-          </div> */}
+          </div>
 
           <div
-            onClick={validate}
+            onClick={CreateNewJob}
             className="flex justify-center items-center mt-[60px] mb-[51px]"
           >
             <Link className="relative inline-block overflow-hidden rounded-[8px] px-[62px] py-[11px] text-white text-[18px] font-[500] bg-blue-600 group">
@@ -2896,4 +2856,4 @@ const JobCreateManual = () => {
   );
 };
 
-export default JobCreateManual;
+export default EditJob;

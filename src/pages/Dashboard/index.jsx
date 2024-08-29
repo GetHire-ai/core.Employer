@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Img, Text } from "components";
 import { useNavigate, Link } from "react-router-dom";
-import { GetApi, DeleteApi ,PostApi } from "Api/Api_Calling";
+import { GetApi, DeleteApi, PostApi } from "Api/Api_Calling";
 import moment from "moment";
 import "./modal.css";
 import {
@@ -74,13 +74,27 @@ const DashboardPage = () => {
         "api/CompanyRoutes/GetAllJobswithApplication"
       );
       setAllJobs(Getalljobs?.data?.data);
-      setFilteredJobs(Getalljobs?.data?.data);
+      const filtd = Getalljobs?.data?.data.filter((job) => job?.JobActive);
+      console.log(filtd);
+      setFilteredJobs(filtd);
       setloading(false);
     } catch (error) {
       setloading(false);
       console.log(error);
     }
   };
+
+  const shareLinkedin = async (id) => {
+    try {
+      const res = await PostApi(`api/CompanyRoutes/share-linkedin/${id}`,{});
+      console.log(res);
+      setloading(false);
+    } catch (error) {
+      setloading(false);
+      console.log(error);
+    }
+  };
+
   const deleteJob = async (id) => {
     try {
       setloading(true);
@@ -94,11 +108,11 @@ const DashboardPage = () => {
       setloading(true);
     }
   };
+
   const ActiveInactiveJobs = async (id) => {
     try {
       const active = await GetApi(`api/CompanyRoutes/ActiveInactiveJob/${id}`);
       GetAllJobs();
-      showActive();
     } catch (error) {
       console.log(error);
     }
@@ -106,7 +120,6 @@ const DashboardPage = () => {
 
   useEffect(() => {
     GetAllJobs();
-    showActive();
   }, []);
 
   const showActive = () => {
@@ -128,48 +141,6 @@ const DashboardPage = () => {
     console.log("Navigate");
     navigate(`/jobsSummary/${job?._id}`);
   };
-
-  // for closing of the "setOpenIndex"
-  const dropdownRef = useRef(null);
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setOpenIndex(false);
-    }
-  };
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-
-  // for linkedin post ------------------------------------------
-//   const postOnLinkedIn = async (companyName , jobRole , min_ctc,max_ctc, min_exp,max_exp , location  ) => {
-//     console.log("postOnLinkedIn" , companyName , jobRole , min_ctc,max_ctc, min_exp,max_exp , location );
-//     try {
-//       const response = await PostApi('/postOnLinkedIn', { 
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ companyName, jobRole, min_ctc, max_ctc, min_exp, max_exp, location }),
-//       });
-  
-//       const data = await response.json();
-//       if (response.ok) {
-//         console.log("Post successful:", data);
-//         alert('Post Successfully done');
-//       } else {
-//         console.error("Post failed:", data.message);
-//         alert("Failed to post, sorry for this... we will be right back soon.");
-//       }
-//     } catch (error) {
-//       console.error("Error occurred while posting:", error);
-//       alert("Failed to post, sorry for this... we will be right back soon.");
-//     }
-// };
-
 
   return (
     <div className="container mx-auto">
@@ -245,194 +216,6 @@ const DashboardPage = () => {
               </div>
             </div>
           </div>
-
-          {/* {filteredJobs?.map((job, index) => (
-            <>
-              <div className="w-full border rounded-2xl flex justify-center items-center p-5 m-5 bg-white">
-                <div className="flex flex-col gap-5 justify-center items-start w-1/3 border-r p-2">
-                  <div>
-                    <h2 className="text-md text-gray-900">
-                      {job?.positionName}
-                    </h2>
-                    <p className="text-xs text-gray-600 mt-2">
-                      Posted &nbsp;
-                      {moment(job?.createdAt).fromNow()}
-                      {moment(job?.createdAt).fromNow().includes(" hours") &&
-                      moment(job?.createdAt).fromNow() !==
-                        " a few seconds ago" &&
-                      moment(job?.createdAt).fromNow() !== "i n a few seconds"
-                        ? " ago"
-                        : ""}
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap p-2 w-full text-gray-600">
-                    <span className="w-1/2 mt-5">
-                      <i className="fa-solid fa-indian-rupee-sign"></i>&nbsp;
-                      3-6 LPA
-                    </span>
-                    <span className="w-1/2 mt-5">
-                      <i className="fa-solid fa-briefcase"></i>&nbsp;{" "}
-                      {job?.minExp}-{job?.maxExp} Years
-                    </span>
-                    <span className="w-1/2 mt-5">
-                      <i className="fa-solid fa-location-dot"></i>&nbsp;{" "}
-                      {job?.location}
-                    </span>
-                    <span className="w-1/2 mt-5">
-                      <i className="fa-solid fa-hourglass-start"></i>&nbsp; on
-                      hold
-                    </span>
-                  </div>
-                  <div>
-                    <p className="text-gray-600 text-sm">Share On :</p>
-                    <div className="flex gap-4 mt-3">
-                      <button onClick={() => handleToggle(job?._id)}>
-                        <i className="fa-brands fa-linkedin text-gray-500"></i>
-                      </button>
-                      <button onClick={() => handleToggle(job?._id)}>
-                        <i className="fa-brands fa-facebook text-gray-500"></i>
-                      </button>
-                      <button onClick={() => handleToggle(job?._id)}>
-                        <i className="fa-brands fa-twitter text-gray-500"></i>
-                      </button>
-                      <button onClick={() => handleToggle(job?._id)}>
-                        <i className="fa-solid fa-link text-gray-500"></i>
-                      </button>
-                      <button onClick={() => handleToggle(job?._id)}>
-                        <i className="fa-solid fa-qrcode"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-5 justify-center items-start w-3/4 p-2 relative">
-                  {openIndex === index && (
-                    <div
-                      className={`absolute flex right-[-1rem] top-8 bg-white shadow-xl flex-col items-start justify-center p-1 rounded-md shadow-bs2 w-[122px]`}
-                    >
-                      <div className="flex flex-col items-start ml-[10px] justify-center my-[3px] w-[97%] md:w-full">
-                        <div
-                          className="ml-3.5 md:ml-[0] text-[12px] font-[500] text-black cursor-pointer  hover:text-blue-500"
-                          onClick={() => ViewJob(job)}
-                        >
-                          View Job
-                        </div>
-                        <div className="flex flex-row items-start justify-start mt-1 w-[29%] md:w-full">
-                          <Text
-                            className="ml-[3px] text-[12px] font-[500] text-black cursor-pointer  hover:text-blue-500"
-                            size="txtPoppinsMedium9Black900"
-                          >
-                            Edit
-                          </Text>
-                        </div>
-                        {!job.JobActive && (
-                          <div className="flex flex-col items-start justify-start ml-3.5 md:ml-[0] mt-[5px]">
-                            <Text
-                              className="mt-1 font-[500] text-[12px] text-black-900 cursor-pointer  hover:text-blue-500"
-                              size="txtPoppinsMedium9Black900"
-                              onClick={() => ActiveInactiveJobs(job._id)}
-                            >
-                              Active
-                            </Text>
-                          </div>
-                        )}
-                        <div className="flex flex-col items-start justify-start ml-3.5 md:ml-[0] mt-[5px]">
-                          <Text
-                            className="mt-1 font-[500] text-[12px] text-black-900 cursor-pointer  hover:text-blue-500"
-                            size="txtPoppinsMedium9Black900"
-                            onClick={() => {
-                              navigate(`/jobsettings/${job._id}`);
-                            }}
-                          >
-                            Setting
-                          </Text>
-                        </div>
-                        <div className="flex flex-col items-start justify-start ml-3.5 md:ml-[0] mt-[5px]">
-                          <Text
-                            className="mt-1 font-[500] text-[12px] text-black-900 cursor-pointer  hover:text-blue-500"
-                            size="txtPoppinsMedium9Black900"
-                            onClick={() => {
-                              navigate(`/jobreports/${job._id}`);
-                            }}
-                          >
-                            Report
-                          </Text>
-                        </div>
-                        {job.JobActive && (
-                          <div className="flex flex-col items-start justify-start ml-3.5 md:ml-[0] mt-[5px]">
-                            <Text
-                              className="mt-1 font-[500] text-[12px] text-black-900 cursor-pointer  hover:text-blue-500"
-                              size="txtPoppinsMedium9Black900"
-                              onClick={() => ActiveInactiveJobs(job._id)}
-                            >
-                              Close
-                            </Text>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  <div className="w-full flex justify-between items-start mb-5">
-                    <h2 className="text-md text-gray-900">Applications</h2>
-                    <div
-                      className="cursor-pointer px-[10px]"
-                      onClick={() => handleButtonClick(index)}
-                    >
-                      <Img
-                        className="h-[20px]"
-                        src="images/img_group23860.svg"
-                        alt="group23862"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex justify-between px-5 w-full text-gray-600 mb-5">
-                    <div
-                      className="cursor-pointer"
-                      onClick={() => navigate(`/jobsApplication/${job._id}`)}
-                    >
-                      <span className="border-b px-20 py-3 border-orange-500 mb-5">
-                        {job?.totalApplicationCount}
-                      </span>
-                      <h2 className="mt-10 px-10">Applications</h2>
-                    </div>
-                    <div>
-                      <span className="border-b px-20 py-3 border-blue-500 mb-5">
-                        {job?.shortlistedApplicationCount}
-                      </span>
-                      <h2 className="mt-10 px-10">in Process</h2>
-                    </div>
-                    <div>
-                      <span className="border-b px-20 py-3 border-green-500 mb-5">
-                        {job?.selectedStudentCount}
-                      </span>
-                      <h2 className="mt-10 px-10">Hired</h2>
-                    </div>
-                  </div>
-                  <div className="w-full flex justify-end items-center gap-3">
-                    {!job?.JobActive && (
-                      <div className="text-gray-400 px-5 mr-3 border-b border-gray-600  border-dashed">
-                        This Job is not Active
-                      </div>
-                    )}
-
-                    <Link
-                      to={`/smartsourcing/${job._id}`}
-                      className="border border-blue-400 rounded-lg px-2 py-1 text-md text-blue-500 hover:bg-blue-400 hover:text-white"
-                    >
-                      Smart Sourcing
-                    </Link>
-                    <button
-                      className="border border-blue-400 rounded-lg px-2 py-1 text-md text-blue-500 hover:bg-blue-400 hover:text-white"
-                      onClick={() => {
-                        navigate(`/jobsApplicationManager2/${job._id}`);
-                      }}
-                    >
-                      Application Manager
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </>
-          ))} */}
           {filteredJobs?.map((job, index) => (
             <div className="w-full border rounded-2xl flex justify-center items-center p-6 m-6 bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
               <div className="flex flex-col gap-6 justify-center items-start w-1/3 border-r p-4">
@@ -465,9 +248,10 @@ const DashboardPage = () => {
                 <div className="mt-3">
                   <p className="text-gray-600 text-sm">Share On:</p>
                   <div className="flex gap-4 mt-3">
-                    <button className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300"
-                      // onClick={()=>(postOnLinkedIn("flipkart" , job?.positionName , 3 ,6 , job?.minExp , job?.maxExp , job?.location   ))}
-                     >
+                    <button
+                      className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300"
+                      onClick={() => shareLinkedin(job?._id)}
+                    >
                       <i className="fa-brands fa-linkedin"></i>
                     </button>
                     <button className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300">
@@ -488,7 +272,7 @@ const DashboardPage = () => {
               <div className="flex flex-col gap-6 justify-center items-start w-3/4 p-4 relative">
                 {openIndex === index && (
                   <div className="absolute right-[-1rem] top-8 bg-white shadow-xl flex flex-col items-start justify-center p-2 rounded-md w-[122px] z-10">
-                    <div className="flex flex-col items-start justify-center w-full" ref={dropdownRef}>
+                    <div className="flex flex-col items-start justify-center w-full">
                       <div
                         className="text-sm font-medium text-black cursor-pointer hover:text-blue-500 transition duration-150"
                         onClick={() => ViewJob(job)}
@@ -498,7 +282,7 @@ const DashboardPage = () => {
                       <div
                         className="text-sm font-medium text-black cursor-pointer hover:text-blue-500 transition duration-150 mt-1"
                         onClick={() => {
-                          /* Your Edit Function */
+                          navigate("/edit-job", { state: { job } });
                         }}
                       >
                         Edit
@@ -513,16 +297,16 @@ const DashboardPage = () => {
                       )}
                       <div
                         className="text-sm font-medium text-black cursor-pointer hover:text-blue-500 transition duration-150 mt-1"
-                        onClick={() => {navigate("/settings")}}
+                        onClick={() => navigate("/settings")}
                       >
                         Setting
                       </div>
-                      {/* <div
+                      <div
                         className="text-sm font-medium text-black cursor-pointer hover:text-blue-500 transition duration-150 mt-1"
                         onClick={() => alert("Don't know where to route")}
                       >
                         Report
-                      </div> */}
+                      </div>
                       {job.JobActive && (
                         <div
                           className="text-sm font-medium text-black cursor-pointer hover:text-blue-500 transition duration-150 mt-1"
@@ -549,29 +333,6 @@ const DashboardPage = () => {
                     />
                   </div>
                 </div>
-
-                {/* 
-                              <div className="flex justify-between w-full text-gray-600 mb-5 ">
-                                <div className="cursor-pointer " onClick={() => navigate(`/jobsApplication/${job._id}`)}>
-                                  <span className=" border-orange-500 py-3">
-                                    {job?.totalApplicationCount}
-                                  </span>
-                                  <h2 className="mt-2">Applications</h2>
-                                </div>
-                                <div>
-                                  <span className=" border-blue-500 py-3">
-                                    {job?.shortlistedApplicationCount}
-                                  </span>
-                                  <h2 className="mt-2">In Process</h2>
-                                </div>
-                                <div>
-                                  <span className=" border-green-500 py-3">
-                                    {job?.selectedStudentCount}
-                                  </span>
-                                  <h2 className="mt-2">Hired</h2>
-                                </div>
-                              </div> */}
-
                 <div className="flex justify-between w-full text-gray-600 mb-5 h-14  divide-x divide-gray-300">
                   <div
                     className="cursor-pointer -mr-7 px-6"
