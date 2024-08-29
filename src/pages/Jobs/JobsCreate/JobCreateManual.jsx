@@ -4,6 +4,7 @@ import { skills, positions } from "./Suggestion";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
   Select,
+  Collapse,
   FormLabel,
   MenuItem,
   Checkbox,
@@ -17,6 +18,9 @@ import {
   FormControl,
   FormHelperText,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { PostApi } from "Api/Api_Calling";
@@ -282,33 +286,49 @@ const JobCreateManual = () => {
   };
 
   const renderQuestions = (category, questions, categoryIndex) => (
-    <div className="mb-4">
+    <div className="mb-4 font-[poppins]">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold">{category} Questions:</h3>
-        <div>
+        <h3
+          className="font-semibold text-gray-700"
+          style={{ textTransform: "capitalize" }}
+        >
+          {category.charAt(0).toUpperCase() + category.slice(1)} Questions:
+        </h3>
+
+        <div className="mr-4">
           <IconButton onClick={() => handleAddQuestion(category)}>
             <i className="fa-solid fa-plus text-md"></i>
           </IconButton>
           <IconButton onClick={() => handleRemoveCategory(category)}>
-            <i className="fa-solid fa-trash text-red-700 text-md"></i>
+            <DeleteIcon />
           </IconButton>
         </div>
       </div>
       {questions.map((question, index) => (
-        <div key={index} className="flex items-center">
+        <div
+          key={index}
+          className="relative flex items-center font-[poppins] mb-4"
+        >
           <TextField
+            className="bg-[#f8fbff] rounded-2xl font-[poppins]"
             value={question}
             onChange={(e) =>
               handleQuestionChange(category, index, e.target.value)
             }
             fullWidth
+            // multiline
+            // rows={2}
             margin="normal"
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  onClick={() => handleRemoveQuestion(category, index)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              ),
+            }}
           />
-          <IconButton onClick={() => handleRemoveQuestion(category, index)}>
-            <span className="text-md">
-              <i className="fa-solid fa-trash text-red-700"></i>
-            </span>
-          </IconButton>
         </div>
       ))}
     </div>
@@ -2095,56 +2115,64 @@ const JobCreateManual = () => {
                           {`Round ${index + 1}`}
                         </p>
                         <div className="relative ">
-                        {round.Assessment !== "" &&(
-                          <p className="text-[16px] w-[auto] font-[500] border-[1px] text-[#8d8d8d] border-black py-[4px] px-[11px] rounded-[8px]">
-                          {round.Assessment}
-                        </p>
-                        )}
-                        {round.Assessment === "" &&(<FormControl variant="outlined" className="w-[260px]">
-                            <InputLabel
-                              id={`select-label-${index}`}
-                              className="text-[#5956e9]"
+                          {round.Assessment !== "" && (
+                            <p className="text-[16px] w-[auto] font-[500] border-[1px] text-[#8d8d8d] border-black py-[4px] px-[11px] rounded-[8px]">
+                              {round.Assessment}
+                            </p>
+                          )}
+                          {round.Assessment === "" && (
+                            <FormControl
+                              variant="outlined"
+                              className="w-[260px]"
                             >
-                              Select
-                            </InputLabel>
-                            <CustomSelect
-                              labelId={`select-label-${index}`}
-                              value={round.Assessment || ""}
-                              onChange={(event) =>
-                                handleRoundTypeChange(index, event.target.value)
-                              }
-                              label="Select"
-                              className="font-medium text-[16px] rounded-lg"
-                              MenuProps={{
-                                PaperProps: {
-                                  sx: {
-                                    borderRadius: "0.5rem",
-                                    "& .MuiMenuItem-root": {
-                                      "&:hover": {
-                                        backgroundColor: "#f0f0f0",
+                              <InputLabel
+                                id={`select-label-${index}`}
+                                className="text-[#5956e9]"
+                              >
+                                Select
+                              </InputLabel>
+                              <CustomSelect
+                                labelId={`select-label-${index}`}
+                                value={round.Assessment || ""}
+                                onChange={(event) =>
+                                  handleRoundTypeChange(
+                                    index,
+                                    event.target.value
+                                  )
+                                }
+                                label="Select"
+                                className="font-medium text-[16px] rounded-lg"
+                                MenuProps={{
+                                  PaperProps: {
+                                    sx: {
+                                      borderRadius: "0.5rem",
+                                      "& .MuiMenuItem-root": {
+                                        "&:hover": {
+                                          backgroundColor: "#f0f0f0",
+                                        },
                                       },
                                     },
                                   },
-                                },
-                              }}
-                            >
-                              {chooseDateOptionsList
-                                .filter(
-                                  (option) =>
-                                    !rounds.some(
-                                      (r) => r.Assessment === option.value
-                                    )
-                                )
-                                .map((option) => (
-                                  <MenuItem
-                                    key={option.value}
-                                    value={option.value}
-                                  >
-                                    {option.label}
-                                  </MenuItem>
-                                ))}
-                            </CustomSelect>
-                          </FormControl>)}
+                                }}
+                              >
+                                {chooseDateOptionsList
+                                  .filter(
+                                    (option) =>
+                                      !rounds.some(
+                                        (r) => r.Assessment === option.value
+                                      )
+                                  )
+                                  .map((option) => (
+                                    <MenuItem
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </MenuItem>
+                                  ))}
+                              </CustomSelect>
+                            </FormControl>
+                          )}
                         </div>
                         {round.Assessment === "Skill Assessment" && (
                           <button

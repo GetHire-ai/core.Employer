@@ -17,6 +17,7 @@ import {
   FormControl,
   FormHelperText,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { SelectBox } from "components/SelectBox";
 import axios from "axios";
 import { PostApi, PutApi } from "Api/Api_Calling";
@@ -263,33 +264,49 @@ const EditJob = () => {
   };
 
   const renderQuestions = (category, questions, categoryIndex) => (
-    <div className="mb-4">
+    <div className="mb-4 font-[poppins]">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold">{category} Questions:</h3>
-        <div>
+        <h3
+          className="font-semibold text-gray-700"
+          style={{ textTransform: "capitalize" }}
+        >
+          {category.charAt(0).toUpperCase() + category.slice(1)} Questions:
+        </h3>
+
+        <div className="mr-4">
           <IconButton onClick={() => handleAddQuestion(category)}>
             <i className="fa-solid fa-plus text-md"></i>
           </IconButton>
           <IconButton onClick={() => handleRemoveCategory(category)}>
-            <i className="fa-solid fa-trash text-red-700 text-md"></i>
+            <DeleteIcon />
           </IconButton>
         </div>
       </div>
       {questions.map((question, index) => (
-        <div key={index} className="flex items-center">
+        <div
+          key={index}
+          className="relative flex items-center font-[poppins] mb-4"
+        >
           <TextField
+            className="bg-[#f8fbff] rounded-2xl font-[poppins]"
             value={question}
             onChange={(e) =>
               handleQuestionChange(category, index, e.target.value)
             }
             fullWidth
+            // multiline
+            // rows={2}
             margin="normal"
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  onClick={() => handleRemoveQuestion(category, index)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              ),
+            }}
           />
-          <IconButton onClick={() => handleRemoveQuestion(category, index)}>
-            <span className="text-md">
-              <i className="fa-solid fa-trash text-red-700"></i>
-            </span>
-          </IconButton>
         </div>
       ))}
     </div>
@@ -299,7 +316,7 @@ const EditJob = () => {
     validate();
     try {
       setLoading(true);
-      
+
       const responce = await PutApi(
         `api/CompanyRoutes/UpdateJob/${state.job._id}`,
         JobData
@@ -518,7 +535,7 @@ const EditJob = () => {
       ...prev,
       ...state.job,
     }));
-    console.log(state.job)
+    console.log(state.job);
   }, [state]);
   return (
     <div className="container mx-auto">
@@ -551,7 +568,7 @@ const EditJob = () => {
       >
         <div className="flex justify-between items-center">
           <p className="text-[32px] text-center text-black font-[600] flex-grow">
-            Edit a Job 
+            Edit a Job
           </p>
         </div>
         <div className="max-w-4xl mx-auto p-6 bg-white  rounded-md">
