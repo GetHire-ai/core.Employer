@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
+import ShortStudentCard from "pages/Jobs/JobsApplication/ShortStudentCard";
+import JobSidebar from "pages/Jobs/JobsApplication/JobSidebar";
 import { GetApi } from "Api/Api_Calling";
+
+
 import {
   Table,
   TableBody,
@@ -128,6 +132,15 @@ const AllApplications = () => {
     setExpandedRow(expandedRow === id ? null : id);
   };
 
+  //  -------------------
+  const [side1, setSide1] = useState(false);
+  const [openIndex, setOpenIndex] = useState(null);
+  const openSideBar = (index = null) => {
+    setSide1(index !== null ? true : !side1);
+    setOpenIndex(index);
+  };
+ 
+ 
   return (
     <div>
       <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
@@ -268,17 +281,31 @@ const AllApplications = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredApplicationsWithFilters.map((application) => (
+              {filteredApplicationsWithFilters.map((application , index) => (
                 <React.Fragment key={application._id}>
                   <TableRow>
                     <TableCell>
                       <IconButton
-                        onClick={() => handleRowExpand(application._id)}
+                        // onClick={() => handleRowExpand(application._id)}
+                        onClick={() => openSideBar(index)}
                       >
                         {expandedRow === application._id ? (
                           <ExpandLessIcon />
                         ) : (
-                          <ExpandMoreIcon />
+                          <>
+                             <ExpandMoreIcon />
+                             <JobSidebar
+                                side1={side1}
+                                openSideBar={openSideBar}
+                                selectedApplication={application}
+                              />
+                          </>
+                          // <ShortStudentCard
+                          //     key={index}
+                          //     job={application}
+                          //     index={index}
+                          //     openModal={true}
+                          //   />
                         )}
                       </IconButton>
                     </TableCell>

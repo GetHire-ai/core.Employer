@@ -7,6 +7,9 @@ import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import HiringPipline from "./HiringPipline";
 import { GetApi, PostApi, PutApi } from "Api/Api_Calling";
 
+import { QRCodeCanvas } from 'qrcode.react';
+
+
 // importing cirsular bar
 import { CircularProgressbar } from "react-circular-progressbar";
 // importing the logo's
@@ -136,6 +139,7 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
       setEmailToggel(false);
       setMessageToggel(false);
       setOpenDropdownIndex(false);
+      setShowQRCode(false);
     }
   };
 
@@ -175,10 +179,17 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
 };
 
 
+// for qr code
+const [showQRCode, setShowQRCode] = useState(false);
+const [phoneNumber , setPhoneNumber] = useState('+1234567890'); // Replace with the desired phone number
+
+const handleButtonClick = () => {
+  setShowQRCode(!showQRCode);
+};
 
   return (
     <>
-      <div className="w-full" >
+      <div className={`w-full`} >
         <div
           className="overlay"
           style={side1 ? { right: 0 } : { right: "100%" }}
@@ -301,11 +312,19 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
                     )}
 
                   <button
-                    className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-full shadow-lg hover:from-blue-500 hover:to-blue-600 transition-transform transform hover:scale-105"
-                    onClick={()=>handleCall(selectedApplication?.StudentId?.Number)}
+                    className=" relative flex items-center justify-center w-8 h-8 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-full shadow-lg hover:from-blue-500 hover:to-blue-600 transition-transform transform hover:scale-105"
+                    // onClick={()=>handleCall(selectedApplication?.StudentId?.Number)}
+                    onClick={ () => { setPhoneNumber(selectedApplication?.StudentId?.Number) ; handleButtonClick()}}
+                    ref={dropdownRef}
                   >
                     <IoCallOutline className="text-[24px]" />
                   </button>
+                  {showQRCode && (
+                        <div className=" flex items-center flex-col mt-8 absolute z-20 ml-[35%] shadow-md bg-white rounded-lg  ">
+                          <p className="mt-4 text-lg text-blue-600 underline font-semibold">Scan to call</p>
+                          <QRCodeCanvas value={`tel:${phoneNumber}`} size={190} className=" p-4" />
+                        </div>
+                      )}
                 </div>
               </div>
             </div>
