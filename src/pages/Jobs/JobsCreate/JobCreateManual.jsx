@@ -25,6 +25,7 @@ import styled from "@emotion/styled";
 import axios from "axios";
 import { PostApi } from "Api/Api_Calling";
 import { toast } from "react-toastify";
+import PaymentModal from "components/PaymentModals/PaymentModal";
 
 const noticePeriodOptions = ["15 Days", "30 Days", "2 Months", "3 Months"];
 
@@ -90,6 +91,7 @@ const CustomSelect = styled(Select)(({ theme }) => ({
 }));
 
 const options = [
+  "Select All",
   "Technical",
   "Behavioral",
   "Skill Based",
@@ -104,6 +106,7 @@ const JobCreateManual = () => {
   const navigate = useNavigate();
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
+  const [openPayModal, setOpenPayModal] = useState(false);
   const [allowDirectContact, setAllowDirectContact] = useState(false);
   const [JobData, setJobData] = useState({
     type: "job",
@@ -209,7 +212,7 @@ const JobCreateManual = () => {
         return;
       }
     }
-    CreateNewJob();
+    setOpenPayModal(true);
   };
 
   const handleQuestionChange = (topic, index, newValue) => {
@@ -335,6 +338,7 @@ const JobCreateManual = () => {
   );
 
   const CreateNewJob = async () => {
+    setOpenPayModal(false);
     try {
       setLoading(true);
       const responce = await PostApi("api/CompanyRoutes/CreateJob", JobData);
@@ -2601,19 +2605,40 @@ const JobCreateManual = () => {
                                 const {
                                   target: { value },
                                 } = event;
-                                setVideoInterview((prev) => ({
-                                  ...prev,
-                                  topic: Array.isArray(value)
-                                    ? value
-                                    : value.split(","),
-                                }));
-                                setJobData((prev) => ({
-                                  ...prev,
-                                  videoInterview: {
-                                    ...prev.videoInterview,
-                                    topic: value,
-                                  },
-                                }));
+
+                                // If "Select All" is selected, select all options
+                                if (value.includes("Select All")) {
+                                  setVideoInterview((prev) => ({
+                                    ...prev,
+                                    topic: options.filter(
+                                      (option) => option !== "Select All"
+                                    ),
+                                  }));
+                                  setJobData((prev) => ({
+                                    ...prev,
+                                    videoInterview: {
+                                      ...prev.videoInterview,
+                                      topic: options.filter(
+                                        (option) => option !== "Select All"
+                                      ),
+                                    },
+                                  }));
+                                } else {
+                                  // Handle other selections
+                                  setVideoInterview((prev) => ({
+                                    ...prev,
+                                    topic: Array.isArray(value)
+                                      ? value
+                                      : value.split(","),
+                                  }));
+                                  setJobData((prev) => ({
+                                    ...prev,
+                                    videoInterview: {
+                                      ...prev.videoInterview,
+                                      topic: value,
+                                    },
+                                  }));
+                                }
                               }}
                               renderValue={(selected) => selected.join(", ")}
                               className="bg-gray-100"
@@ -2920,6 +2945,11 @@ const JobCreateManual = () => {
           </div>
         </div>
       </div>
+      <PaymentModal
+        open={openPayModal}
+        handleClose={() => setOpenPayModal(false)}
+        jobCreate={CreateNewJob}
+      />
     </div>
   );
 };

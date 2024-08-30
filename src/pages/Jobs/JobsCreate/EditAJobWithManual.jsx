@@ -61,6 +61,7 @@ const englishLevelOptions = ["noEnglish", "basicEnglish", "goodEnglish"];
 const experienceOptions = ["any", "experiencedOnly", "fresherOnly"];
 
 const options = [
+  "Select All",
   "Technical",
   "Behavioral",
   "Skill Based",
@@ -2550,19 +2551,40 @@ const EditJob = () => {
                                 const {
                                   target: { value },
                                 } = event;
-                                setVideoInterview((prev) => ({
-                                  ...prev,
-                                  topic: Array.isArray(value)
-                                    ? value
-                                    : value.split(","),
-                                }));
-                                setJobData((prev) => ({
-                                  ...prev,
-                                  videoInterview: {
-                                    ...prev.videoInterview,
-                                    topic: value,
-                                  },
-                                }));
+
+                                // If "Select All" is selected, select all options
+                                if (value.includes("Select All")) {
+                                  setVideoInterview((prev) => ({
+                                    ...prev,
+                                    topic: options.filter(
+                                      (option) => option !== "Select All"
+                                    ),
+                                  }));
+                                  setJobData((prev) => ({
+                                    ...prev,
+                                    videoInterview: {
+                                      ...prev.videoInterview,
+                                      topic: options.filter(
+                                        (option) => option !== "Select All"
+                                      ),
+                                    },
+                                  }));
+                                } else {
+                                  // Handle other selections
+                                  setVideoInterview((prev) => ({
+                                    ...prev,
+                                    topic: Array.isArray(value)
+                                      ? value
+                                      : value.split(","),
+                                  }));
+                                  setJobData((prev) => ({
+                                    ...prev,
+                                    videoInterview: {
+                                      ...prev.videoInterview,
+                                      topic: value,
+                                    },
+                                  }));
+                                }
                               }}
                               renderValue={(selected) => selected.join(", ")}
                               className="bg-gray-100"
