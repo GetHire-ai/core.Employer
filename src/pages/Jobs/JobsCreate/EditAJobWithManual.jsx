@@ -289,6 +289,7 @@ const EditJob = () => {
           className="relative flex items-center font-[poppins] mb-4"
         >
           <TextField
+            style={{ fontFamily: "poppins" }}
             className="bg-[#f8fbff] rounded-2xl font-[poppins]"
             value={question}
             onChange={(e) =>

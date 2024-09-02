@@ -253,7 +253,15 @@ const DashboardPage = () => {
                   <div className="flex gap-4 mt-3">
                     <button
                       className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300"
-                      onClick={() => shareLinkedin(job?._id)}
+                      onClick={() => {
+                        if (job?.postedLinkedin) {
+                          toast.error("Job is already Posted on linkedin", {
+                            autoClose: 1000,
+                          });
+                        } else {
+                          shareLinkedin(job?._id);
+                        }
+                      }}
                     >
                       <i className="fa-brands fa-linkedin"></i>
                     </button>
