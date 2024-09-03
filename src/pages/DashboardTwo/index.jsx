@@ -15,7 +15,7 @@ const DashboardTwoPage = () => {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState("All Applicants");
   const [filterData, setFilterData] = useState({});
-  const [selectedView, setSelectedView] = useState("List");
+  const [selectedView, setSelectedView] = useState("Board");
   const [side1, setSide1] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filterAppl, setFilterAppl] = useState([]);
@@ -69,6 +69,7 @@ const DashboardTwoPage = () => {
   const GetAllApplication = async () => {
     try {
       const res = await GetApi(`api/CompanyRoutes/GetAllStudentsofajob/${id}`);
+      // console.log(res.data.data[0].StudentId.JobDetails);
       const usersWithAverageScores = res.data.data.map((user) => {
         const totalScore = user.assessment.reduce(
           (sum, assessment) => sum + assessment.scorePercentage,
@@ -264,8 +265,6 @@ const DashboardTwoPage = () => {
           )
         );
       }
-
-      console.log(filteredList[0]?.StudentId?.Experience);
       console.log(filteredList[0]?.StudentId?.Experience);
       console.log(filteredList[0]?.StudentId?.Expected_Salary);
       console.log(filteredList[0]?.StudentId?.Current_Salary);
@@ -411,7 +410,7 @@ const DashboardTwoPage = () => {
                 </span>
               </button>
             </div>
-            <div className="flex gap-[10px] ms-auto">
+            {/* <div className="flex gap-[10px] ms-auto">
               <button
                 className={`${
                   selectedView === "List"
@@ -434,7 +433,7 @@ const DashboardTwoPage = () => {
                 <img src="images/img_boardsvgrepocom.svg" alt="" />
                 Board
               </button>
-            </div>
+            </div> */}
           </div>
           <div className="flex gap-2 p-1 flex-grow overflow-hidden max-h-[90vh]">
             <div
@@ -514,23 +513,47 @@ const DashboardTwoPage = () => {
                               </div>
                               <div className="flex gap-5 justify-start p-3">
                                 <span className="text-gray-500 font-[500] text-md w-1/4">
-                                  Skills :
+                                  Experince
+                                </span>
+                                <span className="text-gray-800  text-md ml-3">
+                                  {application?.StudentId?.JobDetails?.map(
+                                    (exp) => (
+                                      <>
+                                        {exp?.Profile &&
+                                          exp?.Organization &&
+                                          exp?.Start_date &&
+                                          exp?.End_date && (
+                                            <span>
+                                              <span className="font-semibold">
+                                                {exp?.Profile} at{" "}
+                                                {exp?.Organization}
+                                              </span>
+                                              <br />
+                                              <span className="text-sm text-gray-500">
+                                                {exp?.Start_date} to{" "}
+                                                {exp?.End_date}
+                                              </span>{" "}
+                                            </span>
+                                          )}
+                                      </>
+                                    )
+                                  )}
+                                </span>
+                              </div>
+                              <div className="flex gap-5 justify-start p-3">
+                                <span className="text-gray-500 font-[500] text-md w-1/4">
+                                  Skills
                                 </span>
                                 <span className="text-gray-800  text-md ml-3 flex flex-wrap gap-3">
                                   {application?.StudentId?.Skill_Set?.map(
                                     (skill) => (
-                                      <div className="flex flex-col justify-center items-center">
-                                        <div style={{ width: 75, height: 75 }}>
-                                          <CircularProgressbar
-                                            value={skill?.score}
-                                            text={`${skill?.score}%`}
-                                          />
-                                        </div>
-                                        <div>
-                                          <p className="text-[14px] pb-[19px] font-[500]">
-                                            {skill?.Skill}
-                                          </p>
-                                        </div>
+                                      <div className="py-1 px-3 bg-blue-300 rounded-3xl text-white mx-2 flex items-center">
+                                        <span className="bg-blue-500 rounded-full w-8 h-8 flex items-center justify-center text-sm">
+                                          {skill?.score}%
+                                        </span>
+                                        <span className="ml-2">
+                                          {skill?.Skill}
+                                        </span>
                                       </div>
                                     )
                                   )}
@@ -538,7 +561,7 @@ const DashboardTwoPage = () => {
                               </div>
                               <div className="flex gap-5 justify-start p-3">
                                 <span className="text-gray-500 font-[500] text-md w-1/4">
-                                  Availability :
+                                  Availability
                                 </span>
                                 <span className="text-gray-800  text-md ml-3 ">
                                   {application?.Your_availability}

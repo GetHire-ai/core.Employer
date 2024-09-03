@@ -49,6 +49,7 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
         `api/testRoutes/result/aitestresult/bystudentid/${selectedApplication.StudentId._id}/${selectedApplication?.JobId._id}`
       );
       setAiResult(res?.data?.data);
+      console.log(res?.data?.data);
     } catch (error) {
       console.log(error);
     }
