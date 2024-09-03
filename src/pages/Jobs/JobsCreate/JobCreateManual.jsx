@@ -43,8 +43,7 @@ const educationOptions = [
   "12",
   "diploma",
   "iti",
-  // "anyGraduate",
-  // "anyPostGraduate",
+
   "UnderGraduate",
   "PostGraduate",
 ];
