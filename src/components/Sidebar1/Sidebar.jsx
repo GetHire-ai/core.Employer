@@ -396,12 +396,12 @@ const Sidebar = () => {
         <div className="bottom-0" style={{ position: "fixed", bottom: "2rem" }}>
           {!isCollapsed && (
             <div className="flex flex-col mb-3 gap-1">
-              <span className="text-gray-500 text-xs p-1 bg-red-100 w-1/2 rounded-xl">
+              {/* <span className="text-gray-500 text-xs p-1 bg-red-100 w-1/2 rounded-xl">
                 low Balance
               </span>
               <span className="text-gray-500 text-sm">
                 Current Balance : {balance || 0}
-              </span>
+              </span> */}
               {/* <button
                 className="w-full mx-2 border rounded p-2 hover:text-blue-500"
                 onClick={() => Navigate("/wallet")}

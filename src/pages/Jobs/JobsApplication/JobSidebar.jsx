@@ -26,7 +26,7 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
   const [buttonN, setButtonN] = useState("Details");
   const [skillsResult, setSkillsResult] = useState("");
   const [aiResult, setAiResult] = useState("");
-
+  console.log(selectedApplication)
   // this is for we have to take the avg value from the child
   const [skillAverage, setSkillAverage] = useState(0);
   const handleSkillAverage = (average) => {
