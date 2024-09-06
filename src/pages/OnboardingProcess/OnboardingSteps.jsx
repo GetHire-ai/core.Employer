@@ -4,19 +4,18 @@ import {
   TextField,
   Button,
   Box,
-  Paper,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
-  TextField as MuiTextField,
 } from "@mui/material";
+import axios from "axios";
 
-const OnboardingSteps = ({ step }) => {
+const OnboardingSteps = ({ step, jobId, studentId, companyId }) => {
   const [formData, setFormData] = useState({
     fullName: "",
-    contactInfo: "",
-    address: "",
+    contactInformation: "",
+    residentialAddress: "",
     jobTitle: "",
     department: "",
     startDate: "",
@@ -29,16 +28,91 @@ const OnboardingSteps = ({ step }) => {
       salarySlip: null,
       bankStatement: null,
     },
-    email: "",
+    emailAccount: "",
     softwareAccess: "",
     orientationSchedule: null,
-    roleTraining: null,
+    roleSpecificTraining: null,
     teamIntroduction: "",
     reportingStructure: "",
     employeeHandbook: null,
     offerLetterTemplate: "",
   });
 
+  const formFields = {
+    "Personal Information": [
+      { name: "fullName", label: "Full Name", type: "text" },
+      {
+        name: "contactInformation",
+        label: "Contact Information",
+        type: "text",
+      },
+      {
+        name: "residentialAddress",
+        label: "Residential Address",
+        type: "text",
+      },
+    ],
+    "Employment Details": [
+      { name: "jobTitle", label: "Job Title", type: "text" },
+      { name: "department", label: "Department", type: "text" },
+      { name: "startDate", label: "Start Date", type: "date" },
+    ],
+    "Document Submission": [
+      {
+        name: "employmentContract",
+        label: "Employment Contract",
+        type: "file",
+      },
+      { name: "nda", label: "NDA", type: "file" },
+      { name: "taxForms", label: "Tax Forms", type: "file" },
+      { name: "panCard", label: "PAN Card", type: "file" },
+      { name: "aadharCard", label: "Aadhar Card", type: "file" },
+      { name: "salarySlip", label: "Salary Slip", type: "file" },
+      { name: "bankStatement", label: "Bank Statement", type: "file" },
+    ],
+    "Access & IT Setup": [
+      { name: "emailAccount", label: "Company Email", type: "text" },
+      { name: "softwareAccess", label: "Software Access", type: "text" },
+    ],
+    "Orientation & Training": [
+      {
+        name: "orientationSchedule",
+        label: "Orientation Schedule",
+        type: "file",
+      },
+      {
+        name: "roleSpecificTraining",
+        label: "Role-Specific Training",
+        type: "file",
+      },
+    ],
+    "Team Integration": [
+      { name: "teamIntroduction", label: "Team Introduction", type: "text" },
+      {
+        name: "reportingStructure",
+        label: "Reporting Structure",
+        type: "text",
+      },
+    ],
+    "Company Policies & Benefits": [
+      { name: "employeeHandbook", label: "Employee Handbook", type: "file" },
+    ],
+    "Offer Letter Template Selection": [
+      {
+        name: "offerLetterTemplate",
+        label: "Offer Letter Template",
+        type: "select",
+        options: [
+          { value: "standard", label: "Standard Offer Letter" },
+          { value: "executive", label: "Executive Offer Letter" },
+          { value: "internship", label: "Internship Offer Letter" },
+          { value: "contractual", label: "Contractual Offer Letter" },
+        ],
+      },
+    ],
+  };
+
+  // Handle text input changes
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
@@ -47,6 +121,7 @@ const OnboardingSteps = ({ step }) => {
     }));
   };
 
+  // Handle file input changes
   const handleFileChange = (event, fieldName) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -57,348 +132,107 @@ const OnboardingSteps = ({ step }) => {
     }));
   };
 
-  const handleSave = () => {
-    console.log("Saved Data:", formData);
-    // Add your save logic here
+  // Handle form submission (save data)
+  const handleSave = async () => {
+    try {
+      const formDataToSend = new FormData();
+
+      // Append regular fields
+      formDataToSend.append("fullName", formData.fullName);
+      formDataToSend.append("contactInformation", formData.contactInformation);
+      formDataToSend.append("residentialAddress", formData.residentialAddress);
+      formDataToSend.append("jobTitle", formData.jobTitle);
+      formDataToSend.append("department", formData.department);
+      formDataToSend.append("startDate", formData.startDate);
+      formDataToSend.append("emailAccount", formData.emailAccount);
+      formDataToSend.append("softwareAccess", formData.softwareAccess);
+      formDataToSend.append("teamIntroduction", formData.teamIntroduction);
+      formDataToSend.append("reportingStructure", formData.reportingStructure);
+      formDataToSend.append(
+        "offerLetterTemplate",
+        formData.offerLetterTemplate
+      );
+
+      // Append document files
+      Object.keys(formData.documentFiles).forEach((key) => {
+        if (formData.documentFiles[key]) {
+          formDataToSend.append(key, formData.documentFiles[key]);
+        }
+      });
+      // await axios.put(
+      //   `/api/onboarding/update/${jobId}/${studentId}/${companyId}`,
+      //   formDataToSend,
+      //   {
+      //     headers: {
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   }
+      // );
+      console.log("Onboarding data saved successfully", formDataToSend);
+    } catch (error) {
+      console.error("Error saving onboarding data:", error);
+    }
   };
 
   const renderForm = () => {
-    switch (step) {
-      case "Personal Information":
+    const fields = formFields[step] || [];
+
+    return fields.map((field) => {
+      if (field.type === "text" || field.type === "date") {
         return (
-          <Box>
-            <Typography>
-              Please confirm your full legal name for our records.
-            </Typography>
-            <TextField
-              name="fullName"
-              label="Full Name"
-              value={formData.fullName}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <Typography>
-              Provide your primary phone number and email address.
-            </Typography>
-            <TextField
-              name="contactInfo"
-              label="Contact Information"
-              value={formData.contactInfo}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <Typography>
-              Enter your current residential address for official communication.
-            </Typography>
-            <TextField
-              name="address"
-              label="Residential Address"
-              value={formData.address}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
+          <TextField
+            key={field.name}
+            name={field.name}
+            label={field.label}
+            type={field.type}
+            value={formData[field.name]}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            InputLabelProps={
+              field.type === "date" ? { shrink: true } : undefined
+            }
+          />
+        );
+      }
+
+      if (field.type === "file") {
+        return (
+          <Box key={field.name} mb={2}>
+            <Typography>{field.label}</Typography>
+            <Button variant="contained" component="label">
+              Upload {field.label}
+              <input
+                type="file"
+                hidden
+                onChange={(e) => handleFileChange(e, field.name)}
+              />
+            </Button>
           </Box>
         );
-      case "Employment Details":
+      }
+
+      if (field.type === "select") {
         return (
-          <Box>
-            <Typography>
-              Your job title is: [Auto-filled]. Please confirm.
-            </Typography>
-            <TextField
-              name="jobTitle"
-              label="Job Title"
-              value={formData.jobTitle}
+          <FormControl key={field.name} fullWidth margin="normal">
+            <InputLabel>{field.label}</InputLabel>
+            <Select
+              name={field.name}
+              value={formData[field.name]}
               onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <Typography>
-              You will be joining the [Auto-filled Department]. Please
-              acknowledge.
-            </Typography>
-            <TextField
-              name="department"
-              label="Department"
-              value={formData.department}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <Typography>
-              Your start date is set for [Auto-filled Date]. Please confirm.
-            </Typography>
-            <TextField
-              name="startDate"
-              label="Start Date"
-              type="date"
-              value={formData.startDate}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              InputLabelProps={{ shrink: true }}
-            />
-          </Box>
-        );
-      case "Document Submission":
-        return (
-          <Box>
-            <FormControl fullWidth margin="normal">
-              <Typography variant="body2" color="textSecondary">
-                Please review and e-sign your employment contract.
-              </Typography>
-              <Button
-                variant="contained"
-                component="label"
-                sx={{ maxWidth: "25%" }}
-              >
-                Employment Contract
-                <input
-                  type="file"
-                  hidden
-                  onChange={(e) => handleFileChange(e, "employmentContract")}
-                />
-              </Button>
-            </FormControl>
-            <FormControl fullWidth margin="normal">
-              <Typography variant="body2" color="textSecondary">
-                Please review and e-sign the NDA to ensure confidentiality.
-              </Typography>
-              <Button
-                variant="contained"
-                component="label"
-                sx={{ maxWidth: "25%" }}
-              >
-                NDA
-                <input
-                  type="file"
-                  hidden
-                  onChange={(e) => handleFileChange(e, "nda")}
-                />
-              </Button>
-            </FormControl>
-            <FormControl fullWidth margin="normal">
-              <Typography variant="body2" color="textSecondary">
-                Complete and submit the necessary tax forms.
-              </Typography>
-              <Button
-                variant="contained"
-                component="label"
-                sx={{ maxWidth: "25%" }}
-              >
-                Tax Forms
-                <input
-                  type="file"
-                  hidden
-                  onChange={(e) => handleFileChange(e, "taxForms")}
-                />
-              </Button>
-            </FormControl>
-            <FormControl fullWidth margin="normal">
-              <Typography variant="body2" color="textSecondary">
-                Upload PAN card.
-              </Typography>
-              <Button
-                variant="contained"
-                component="label"
-                sx={{ maxWidth: "25%" }}
-              >
-                PAN Card
-                <input
-                  type="file"
-                  hidden
-                  onChange={(e) => handleFileChange(e, "panCard")}
-                />
-              </Button>
-            </FormControl>
-            <FormControl fullWidth margin="normal">
-              <Typography variant="body2" color="textSecondary">
-                Upload Aadhar card.
-              </Typography>
-              <Button
-                variant="contained"
-                component="label"
-                sx={{ maxWidth: "25%" }}
-              >
-                Aadhar Card
-                <input
-                  type="file"
-                  hidden
-                  onChange={(e) => handleFileChange(e, "aadharCard")}
-                />
-              </Button>
-            </FormControl>
-            <FormControl fullWidth margin="normal">
-              <Typography variant="body2" color="textSecondary">
-                Upload last 6 months salary slip.
-              </Typography>
-              <Button
-                variant="contained"
-                component="label"
-                sx={{ maxWidth: "25%" }}
-              >
-                Salary Slip
-                <input
-                  type="file"
-                  hidden
-                  onChange={(e) => handleFileChange(e, "salarySlip")}
-                />
-              </Button>
-            </FormControl>
-            <FormControl fullWidth margin="normal">
-              <Typography variant="body2" color="textSecondary">
-                Upload 6 months bank statement.
-              </Typography>
-              <Button
-                variant="contained"
-                component="label"
-                sx={{ maxWidth: "25%" }}
-              >
-                Bank Statement
-                <input
-                  type="file"
-                  hidden
-                  onChange={(e) => handleFileChange(e, "bankStatement")}
-                />
-              </Button>
-            </FormControl>
-          </Box>
-        );
-      case "Access & IT Setup":
-        return (
-          <Box>
-            <Typography>
-              Your company email has been created: [Auto-filled Email]. Please
-              set your password.
-            </Typography>
-            <TextField
-              name="email"
-              label="Company Email"
-              value={formData.email}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <Typography>
-              Access to required software tools has been granted. Review your
-              login credentials.
-            </Typography>
-            <TextField
-              name="softwareAccess"
-              label="Software Access"
-              value={formData.softwareAccess}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-          </Box>
-        );
-      case "Orientation & Training":
-        return (
-          <Box>
-            <Typography>
-              Here’s your orientation schedule for the first week. Sync it with
-              your calendar.
-            </Typography>
-            <input
-              type="file"
-              onChange={(e) => handleFileChange(e, "orientationSchedule")}
-            />
-            <Typography>
-              Access your role-specific training materials here. Complete by
-              [Auto-filled Deadline].
-            </Typography>
-            <input
-              type="file"
-              onChange={(e) => handleFileChange(e, "roleTraining")}
-            />
-          </Box>
-        );
-      case "Team Integration":
-        return (
-          <Box>
-            <Typography>
-              Meet your team! Review their profiles and get to know your key
-              contacts.
-            </Typography>
-            <TextField
-              name="teamIntroduction"
-              label="Team Introduction"
-              value={formData.teamIntroduction}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <Typography>
-              You will report to [Auto-filled Manager]. Here’s an overview of
-              the team structure.
-            </Typography>
-            <TextField
-              name="reportingStructure"
-              label="Reporting Structure"
-              value={formData.reportingStructure}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-          </Box>
-        );
-      case "Company Policies & Benefits":
-        return (
-          <Box>
-            <Typography>
-              Download and review the Employee Handbook. Acknowledge receipt
-              once done.
-            </Typography>
-            <input
-              type="file"
-              onChange={(e) => handleFileChange(e, "employeeHandbook")}
-            />
-          </Box>
-        );
-      case "Offer Letter Template Selection":
-        return (
-          <Box>
-            <Typography>
-              Please select an offer letter template to share with the
-              candidate.
-            </Typography>
-            <FormControl fullWidth margin="normal">
-              <InputLabel>Offer Letter Template</InputLabel>
-              <Select
-                name="offerLetterTemplate"
-                value={formData.offerLetterTemplate}
-                onChange={handleChange}
-              >
-                <MenuItem value="standard">Standard Offer Letter</MenuItem>
-                <MenuItem value="executive">Executive Offer Letter</MenuItem>
-                <MenuItem value="internship">Internship Offer Letter</MenuItem>
-                <MenuItem value="contractual">
-                  Contractual Offer Letter
+            >
+              {field.options.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
                 </MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
+              ))}
+            </Select>
+          </FormControl>
         );
-      case "Onboarding Completion":
-        return (
-          <Box>
-            <Typography>
-              Review your onboarding checklist to ensure all steps are
-              completed.
-            </Typography>
-            <Typography>
-              Congratulations! You have completed the onboarding process. Your
-              HR contact will reach out for any final steps.
-            </Typography>
-          </Box>
-        );
-      default:
-        return null;
-    }
+      }
+
+      return null;
+    });
   };
 
   return (
@@ -406,7 +240,7 @@ const OnboardingSteps = ({ step }) => {
       <Typography variant="h6" textAlign="center">
         {step || "None"}
       </Typography>
-      <Box elevation={3} sx={{ padding: 2, marginTop: 2 }}>
+      <Box sx={{ padding: 2, marginTop: 2 }}>
         {renderForm()}
         <Box mt={2} textAlign="center">
           <Button variant="contained" color="primary" onClick={handleSave}>
