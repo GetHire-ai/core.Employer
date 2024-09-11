@@ -11,9 +11,9 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
-const OnboardingSteps = ({ step, jobId, studentId, companyId }) => {
+const OnboardingSteps = ({ data, step, updateOnboarding }) => {
   const [formData, setFormData] = useState({
-    fullName: "",
+    fullName: data?.fullName,
     contactInformation: "",
     residentialAddress: "",
     jobTitle: "",
@@ -40,7 +40,12 @@ const OnboardingSteps = ({ step, jobId, studentId, companyId }) => {
 
   const formFields = {
     "Personal Information": [
-      { name: "fullName", label: "Full Name", type: "text" },
+      {
+        name: "fullName",
+        label: "Full Name",
+        type: "text",
+        value: data?.fullName,
+      },
       {
         name: "contactInformation",
         label: "Contact Information",
@@ -112,7 +117,6 @@ const OnboardingSteps = ({ step, jobId, studentId, companyId }) => {
     ],
   };
 
-  // Handle text input changes
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
@@ -134,44 +138,27 @@ const OnboardingSteps = ({ step, jobId, studentId, companyId }) => {
 
   // Handle form submission (save data)
   const handleSave = async () => {
-    try {
-      const formDataToSend = new FormData();
+    const formDataToSend = new FormData();
+    // Append regular fields
+    formDataToSend.append("fullName", formData.fullName);
+    formDataToSend.append("contactInformation", formData.contactInformation);
+    formDataToSend.append("residentialAddress", formData.residentialAddress);
+    formDataToSend.append("jobTitle", formData.jobTitle);
+    formDataToSend.append("department", formData.department);
+    formDataToSend.append("startDate", formData.startDate);
+    formDataToSend.append("emailAccount", formData.emailAccount);
+    formDataToSend.append("softwareAccess", formData.softwareAccess);
+    formDataToSend.append("teamIntroduction", formData.teamIntroduction);
+    formDataToSend.append("reportingStructure", formData.reportingStructure);
+    formDataToSend.append("offerLetterTemplate", formData.offerLetterTemplate);
 
-      // Append regular fields
-      formDataToSend.append("fullName", formData.fullName);
-      formDataToSend.append("contactInformation", formData.contactInformation);
-      formDataToSend.append("residentialAddress", formData.residentialAddress);
-      formDataToSend.append("jobTitle", formData.jobTitle);
-      formDataToSend.append("department", formData.department);
-      formDataToSend.append("startDate", formData.startDate);
-      formDataToSend.append("emailAccount", formData.emailAccount);
-      formDataToSend.append("softwareAccess", formData.softwareAccess);
-      formDataToSend.append("teamIntroduction", formData.teamIntroduction);
-      formDataToSend.append("reportingStructure", formData.reportingStructure);
-      formDataToSend.append(
-        "offerLetterTemplate",
-        formData.offerLetterTemplate
-      );
-
-      // Append document files
-      Object.keys(formData.documentFiles).forEach((key) => {
-        if (formData.documentFiles[key]) {
-          formDataToSend.append(key, formData.documentFiles[key]);
-        }
-      });
-      // await axios.put(
-      //   `/api/onboarding/update/${jobId}/${studentId}/${companyId}`,
-      //   formDataToSend,
-      //   {
-      //     headers: {
-      //       "Content-Type": "multipart/form-data",
-      //     },
-      //   }
-      // );
-      console.log("Onboarding data saved successfully", formDataToSend);
-    } catch (error) {
-      console.error("Error saving onboarding data:", error);
-    }
+    // Append document files
+    Object.keys(formData.documentFiles).forEach((key) => {
+      if (formData.documentFiles[key]) {
+        formDataToSend.append(key, formData.documentFiles[key]);
+      }
+    });
+    updateOnboarding(formData);
   };
 
   const renderForm = () => {

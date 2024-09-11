@@ -43,7 +43,7 @@ const OnboardingProcess = () => {
           selectedDocuments: onboardingProcess.selectedDocuments || [],
           orientationType: onboardingProcess.orientationType || "pdf",
           orientationFiles: [],
-          address: onboardingProcess.address || "", // Added for address
+          address: onboardingProcess.address || "", 
         });
       } catch (error) {
         console.log(error);

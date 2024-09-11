@@ -74,21 +74,19 @@ const ShortStudentCard = ({ job, index, openModal }) => {
     setOpenIndex(index);
   };
 
-//  ---------------
-const dropdownRef = useRef(null);
-const handleClickOutside = (event) => {
-  if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-    setOpenDropdownIndex(false);
-  }
-};
-useEffect(() => {
-  document.addEventListener('mousedown', handleClickOutside);
-  return () => {
-    document.removeEventListener('mousedown', handleClickOutside);
+  //  ---------------
+  const dropdownRef = useRef(null);
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setOpenDropdownIndex(false);
+    }
   };
-}, []);
-
-
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -170,7 +168,15 @@ useEffect(() => {
                     </li>
                     <li
                       className="flex items-center text-xs px-2 py-1 bg-white border border-gray-200 hover:bg-gray-100 cursor-pointer hover:text-[#0ba1dc] transition duration-150 rounded"
-                      onClick={() => alert("It will not work now")}
+                      onClick={() => {
+                        navigate("/onboarding-process", {
+                          state: {
+                            jobId: job.JobId._id,
+                            studentId: job.StudentId._id,
+                            companyId: job.CompanyId,
+                          },
+                        });
+                      }}
                     >
                       <i className="fa-solid fa-user-plus mr-2"></i>
                       Hire

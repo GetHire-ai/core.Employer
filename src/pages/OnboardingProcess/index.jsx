@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { GetApi } from "Api/Api_Calling";
+import { GetApi, PostApi } from "Api/Api_Calling";
 import OnboardingSteps from "./OnboardingSteps";
 import {
   Autocomplete,
@@ -11,6 +11,7 @@ import {
   Typography,
   Paper,
 } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 const steps = [
   "Personal Information",
@@ -25,35 +26,66 @@ const steps = [
 ];
 
 const Index = () => {
+  const location = useLocation();
+  const { state } = location;
   const [allJobs, setAllJobs] = useState([]);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [onboardingData, setOnboardingData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedJob, setSelectedJob] = useState(null);
   const [step, setStep] = useState("");
 
-  const getAllJobs = async () => {
+  const getOnboarding = async () => {
     try {
-      const res = await GetApi("api/CompanyRoutes/GetAllJobswithApplication");
-      setAllJobs(res?.data?.data || []);
+      const res = await GetApi(
+        `api/CompanyRoutes/get-onboarding/${state.jobId}/${state.studentId}/${state.companyId}`
+      );
+      setOnboardingData(res?.data?.data || {});
+      console.error(res.data.data);
     } catch (err) {
-      setError("Failed to fetch jobs");
-      console.error(err);
+      setError("Failed to fetch data");
+      console.error(err.response);
     } finally {
       setLoading(false);
     }
   };
+  const updateOnboarding = async (data) => {
+    try {
+      const res = await PostApi(
+        `api/CompanyRoutes/update-onboarding/${onboardingData._id}`,
+        data
+      );
+      console.error(res);
+    } catch (err) {
+      // setError("Failed to update data");
+      console.error(err.response);
+    } finally {
+      setLoading(false);
+    }
+  };
+  // const getAllJobs = async () => {
+  //   try {
+  //     const res = await GetApi("api/CompanyRoutes/GetAllJobswithApplication");
+  //     setAllJobs(res?.data?.data || []);
+  //   } catch (err) {
+  //     setError("Failed to fetch jobs");
+  //     console.error(err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  // const handleJobChange = (event, newValue) => {
+  //   setSelectedJob(newValue);
+  //   console.log("Selected job:", newValue);
+  // };
 
   useEffect(() => {
-    getAllJobs();
+    // getAllJobs();
+    getOnboarding();
   }, []);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
-
-  const handleJobChange = (event, newValue) => {
-    setSelectedJob(newValue);
-    console.log("Selected job:", newValue);
-  };
 
   return (
     <Paper
@@ -66,7 +98,7 @@ const Index = () => {
       }}
     >
       <Paper elevation={3} sx={{ width: 290, padding: 2, marginRight: 2 }}>
-        <Autocomplete
+        {/* <Autocomplete
           options={allJobs.map((job) => ({
             label: job.positionName,
             id: job._id,
@@ -75,7 +107,7 @@ const Index = () => {
           renderInput={(params) => (
             <TextField {...params} label="Select Job" variant="outlined" />
           )}
-        />
+        /> */}
         <List>
           {steps.map((stepName, index) => (
             <ListItem button key={index} onClick={() => setStep(stepName)}>
@@ -85,7 +117,11 @@ const Index = () => {
         </List>
       </Paper>
       <Box flex={1}>
-        <OnboardingSteps step={step} />
+        <OnboardingSteps
+          step={step}
+          updateOnboarding={updateOnboarding}
+          data={onboardingData}
+        />
       </Box>
     </Paper>
   );
