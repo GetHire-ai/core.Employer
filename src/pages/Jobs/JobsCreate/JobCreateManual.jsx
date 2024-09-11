@@ -336,13 +336,13 @@ const JobCreateManual = () => {
     </div>
   );
 
-  const CreateNewJob = async () => {
+  const CreateNewJob = async (navigatePath="/jobs") => {
     setOpenPayModal(false);
     try {
       setLoading(true);
       const responce = await PostApi("api/CompanyRoutes/CreateJob", JobData);
       toast.success(responce?.data?.message, { autoClose: 1000 });
-      navigate("/jobs");
+      navigate(navigatePath);
     } catch (error) {
       toast.error(error?.response?.data?.message, { autoClose: 1000 });
       console.log(error);
@@ -907,6 +907,46 @@ const JobCreateManual = () => {
                     </select>
                   </div>
                 )}
+
+{JobData.jobType !== "remote" && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">
+                      City<span className="text-red-600 text-md ml-1">*</span>
+                    </label>
+                    <input
+                      value={JobData.location}
+                      name="location"
+                      type="text"
+                      className={`mt-1 block w-full px-3 py-2 bg-white border hover:shadow-xl border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+                        formSubmitted && JobData.location === ""
+                          ? "border-red-500"
+                          : ""
+                      }`}
+                      placeholder="Enter city name"
+                      onChange={handleCityInputChange}
+                    />
+                    {citySuggestions.length > 0 && (
+                      <ul className="bg-white border border-gray-300 rounded-md mt-2 max-h-60 overflow-y-auto">
+                        {citySuggestions.map((city, index) => (
+                          <li
+                            key={index}
+                            className="p-2 cursor-pointer hover:bg-gray-200"
+                            onClick={() => {
+                              setJobData((prev) => ({
+                                ...prev,
+                                location: city.matching_full_name,
+                              }));
+                              setCitySuggestions([]);
+                            }}
+                          >
+                            {city.matching_full_name}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )}
+
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700">
                     Part-time/Full-time{" "}
@@ -953,6 +993,8 @@ const JobCreateManual = () => {
                     {JobData?.shift === "" && formSubmitted && "Please Select"}
                   </span>
                 </div>
+                
+                
 
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center gap-4">
@@ -1141,44 +1183,6 @@ const JobCreateManual = () => {
                     </div>
                   )}
                 </div>
-                {JobData.jobType !== "remote" && (
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">
-                      City<span className="text-red-600 text-md ml-1">*</span>
-                    </label>
-                    <input
-                      value={JobData.location}
-                      name="location"
-                      type="text"
-                      className={`mt-1 block w-full px-3 py-2 bg-white border hover:shadow-xl border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
-                        formSubmitted && JobData.location === ""
-                          ? "border-red-500"
-                          : ""
-                      }`}
-                      placeholder="Enter city name"
-                      onChange={handleCityInputChange}
-                    />
-                    {citySuggestions.length > 0 && (
-                      <ul className="bg-white border border-gray-300 rounded-md mt-2 max-h-60 overflow-y-auto">
-                        {citySuggestions.map((city, index) => (
-                          <li
-                            key={index}
-                            className="p-2 cursor-pointer hover:bg-gray-200"
-                            onClick={() => {
-                              setJobData((prev) => ({
-                                ...prev,
-                                location: city.matching_full_name,
-                              }));
-                              setCitySuggestions([]);
-                            }}
-                          >
-                            {city.matching_full_name}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                )}
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700">
                     Number Of Openings
@@ -2330,11 +2334,11 @@ const JobCreateManual = () => {
                                             variant="outlined"
                                             className="form-select p-2 m-1 w-1/2"
                                           >
-                                            <InputLabel id="skill-select-label">
+                                            <InputLabel id={"skill-select-label-"+index}>
                                               Select
                                             </InputLabel>
                                             <Select
-                                              labelId="skill-select-label"
+                                              labelId={"skill-select-label-"+index}
                                               value={
                                                 assessmentSkills[index]
                                                   ?.skill || ""
@@ -2658,7 +2662,7 @@ const JobCreateManual = () => {
                             <button
                               className="bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300"
                               onClick={async () => {
-                                setJDLoading(true);
+                                setLoading(true);
                                 if (!JobData || JobData.positionName === "") {
                                   toast.error("Job title is required", {
                                     autoClose: 1000,
@@ -2695,7 +2699,7 @@ const JobCreateManual = () => {
                                 } catch (error) {
                                   // Handle error
                                 } finally {
-                                  setJDLoading(false);
+                                  setLoading(false);
                                 }
                               }}
                             >
