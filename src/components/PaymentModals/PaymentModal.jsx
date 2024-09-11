@@ -92,13 +92,13 @@ const PaymentModal = ({ open, handleClose, jobCreate }) => {
               </button>
               <button
                 className="my-3 rounded-lg text-white bg-[#0083d5] hover:bg-[#034b9d] px-4 py-2"
-                onClick={() => navigate("/onboarding-process")}
+                onClick={() => jobCreate("/onboarding-process")}
               >
                 Set Up Onboarding Process
               </button>
               <button
                 className="my-3 rounded-lg text-white bg-[#0083d5] hover:bg-[#034b9d] px-4 py-2"
-                onClick={() => navigate("/onboarding-process")}
+                onClick={() => jobCreate("/onboarding-process")}
               >
                 Generate AI-Based Offer Letter
               </button>
