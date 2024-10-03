@@ -101,8 +101,8 @@ const HiringPipline = ({ aiResult, skillsResult, profile, onSkillAverage }) => {
                   </div>
                   <div style={{ width: 60, height: 60 }}>
                     <CircularProgressbar
-                      value={20}
-                      text={`${20}%`}
+                      value={skillsResult?.scorePercentage || 0}
+                      text={`${skillsResult?.scorePercentage || 0}%`}
                       styles={{
                         path: { stroke: "#4F46E5", strokeWidth: "6px" },
                         text: {
