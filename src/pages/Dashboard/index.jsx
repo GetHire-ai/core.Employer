@@ -3,6 +3,7 @@ import { Button, Img, Text } from "components";
 import { useNavigate, Link } from "react-router-dom";
 import { GetApi, DeleteApi, PostApi } from "Api/Api_Calling";
 import moment from "moment";
+import { QRCodeSVG } from "qrcode.react";
 import "./modal.css";
 import {
   Modal,
@@ -271,10 +272,16 @@ const DashboardPage = () => {
                     <button className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300">
                       <i className="fa-brands fa-twitter"></i>
                     </button>
-                    <button className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300">
+                    <button
+                      className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300"
+                      onClick={() => handleToggle(job._id)}
+                    >
                       <i className="fa-solid fa-link"></i>
                     </button>
-                    <button className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300">
+                    <button
+                      className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300"
+                      onClick={() => handleToggle(job._id)}
+                    >
                       <i className="fa-solid fa-qrcode"></i>
                     </button>
                   </div>
@@ -530,7 +537,11 @@ const DashboardPage = () => {
           </Box>
 
           <div className="flex gap-4 mt-3">
-            <button>
+            <div>
+              {/* <h2>Your QR Code</h2> */}
+              {link && <QRCodeSVG value={link} />}
+            </div>
+            {/* <button>
               <i className="fa-brands fa-linkedin text-gray-500"></i>
             </button>
             <button>
@@ -544,7 +555,7 @@ const DashboardPage = () => {
             </button>
             <button>
               <i className="fa-solid fa-qrcode"></i>
-            </button>
+            </button> */}
           </div>
         </Box>
       </Modal>
