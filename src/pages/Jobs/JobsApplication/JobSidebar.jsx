@@ -6,12 +6,8 @@ import { Viewer, Worker } from "@react-pdf-viewer/core";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import HiringPipline from "./HiringPipline";
 import { GetApi, PostApi, PutApi } from "Api/Api_Calling";
-
 import { QRCodeCanvas } from "qrcode.react";
-
-// importing cirsular bar
 import { CircularProgressbar } from "react-circular-progressbar";
-// importing the logo's
 import { SiGooglemessages } from "react-icons/si";
 import { IoIosMail } from "react-icons/io";
 import { IoCallOutline } from "react-icons/io5";
@@ -35,6 +31,7 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
       let res = await GetApi(
         `api/testRoutes/result/bystudentid/${selectedApplication?.StudentId._id}/${selectedApplication?.JobId._id}`
       );
+      // console.log(res.data.data)
       setSkillsResult(res?.data?.data);
     } catch (error) {
       console.log(error);
@@ -46,7 +43,7 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
         `api/testRoutes/result/aitestresult/bystudentid/${selectedApplication.StudentId._id}/${selectedApplication?.JobId._id}`
       );
       setAiResult(res?.data?.data);
-      console.log(res?.data?.data);
+      // console.log(res);
     } catch (error) {
       console.log(error);
     }
@@ -96,7 +93,7 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
 
   // for call
   const handleCall = (number) => {
-    window.location.href = `tel:${number}`; // Replace with the desired phone number
+    window.location.href = `tel:${number}`;
   };
   // for email
   const [emailToggel, setEmailToggel] = useState(false);
@@ -756,7 +753,6 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
               aiResult={aiResult}
               skillsResult={skillsResult}
               profile={selectedApplication}
-              // this below is the props that passed by HiringPipline
               onSkillAverage={handleSkillAverage}
             />
           )}
