@@ -5,6 +5,7 @@ import { MdKeyboardArrowRight, MdKeyboardArrowDown } from "react-icons/md";
 import { FiAlignRight } from "react-icons/fi";
 import ChatModal from "components/ChatBox/ChatModal";
 import { GetApi } from "Api/Api_Calling";
+import logo from "../../assets/images/logo.svg";
 
 // importing database logo
 import { BsDatabase } from "react-icons/bs";
@@ -113,16 +114,11 @@ const Sidebar = () => {
         onMouseLeave={() => setIsCollapsed(true)}
       >
         <div className="flex justify-between w-full font-semibold text-2xl">
-          <div className="flex gap-1 cursor-pointer"
-           onClick={()=>Navigate('/')} >
-            <Img
-              className={`w-[120px] mb-3`}
-              src={
-                // "https://gethire-student.vercel.app/static/media/Gethire%20SVG.e7e8d00d37dbfe10fc42a63f9eb11af6.svg" ||
-                "https://get-hire-student.vercel.app/static/media/Gethire%20SVG.e7e8d00d37dbfe10fc42a63f9eb11af6.svg"
-              }
-              alt="logo"
-            />
+          <div
+            className="flex gap-1 cursor-pointer"
+            onClick={() => Navigate("/")}
+          >
+            <Img className={`w-[120px] mb-3`} src={logo} alt="logo" />
           </div>
           <FiAlignRight
             size={30}
