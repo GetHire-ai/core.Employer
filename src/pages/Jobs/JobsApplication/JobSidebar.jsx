@@ -31,7 +31,6 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
       let res = await GetApi(
         `api/testRoutes/result/bystudentid/${selectedApplication?.StudentId._id}/${selectedApplication?.JobId._id}`
       );
-      // console.log(res.data.data)
       setSkillsResult(res?.data?.data);
     } catch (error) {
       console.log(error);
@@ -83,7 +82,6 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
         `api/CompanyRoutes/ScheduleInterview/${selectedid}`,
         { interviewSchedule: interviewData }
       );
-      console.log(response);
       setInterviewModal(false);
     } catch (error) {
       setLoading(false);

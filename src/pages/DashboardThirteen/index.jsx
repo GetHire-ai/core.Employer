@@ -183,7 +183,6 @@ const DashboardThirteenPage = () => {
         `api/CompanyRoutes/ScheduleInterview/${selectedid}`,
         { interviewSchedule: interviewData }
       );
-      console.log(response);
       setInterviewModal(false);
     } catch (error) {
       setLoading(false);

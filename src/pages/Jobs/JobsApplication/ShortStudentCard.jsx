@@ -22,7 +22,7 @@ const ShortStudentCard = ({ job, index, openModal }) => {
       );
       setSkillsResult(res?.data?.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -33,7 +33,7 @@ const ShortStudentCard = ({ job, index, openModal }) => {
       );
       setAiResult(res?.data?.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -46,7 +46,6 @@ const ShortStudentCard = ({ job, index, openModal }) => {
 
   let skillMcqAverage = () => {
     if (!job?.StudentId?.Skill_Set || job.StudentId.Skill_Set.length === 0) {
-      console.log("No skills available");
       return;
     }
 

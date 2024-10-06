@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Modal,
-  Box,
-  Typography,
-  Avatar,
-  TextField,
-} from "@mui/material";
+import { Modal } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import io from "socket.io-client";
 import {
@@ -15,9 +8,7 @@ import {
   getConversation,
   sendMessage,
 } from "./apiservices";
-// const socket = io("http://localhost:5000", { withCredentials: true });
-// const socket = io("https://get-hire.vercel.app", { withCredentials: true });
-const socket = io("https://gethire-backend.onrender.com", { withCredentials: true });
+const socket = io("http://localhost:5000", { withCredentials: true });
 
 const ChatModal = ({ open, handleClose }) => {
   let company = JSON.parse(localStorage.getItem("companydata"));
@@ -31,12 +22,10 @@ const ChatModal = ({ open, handleClose }) => {
       getConversation(company._id)
         .then((response) => {
           setCurrentConversationId(response.data.data._id);
-          console.log("coversationId", response.data.data._id);
           return getMessages(response.data.data._id);
         })
         .then((response) => {
           setMessages(response.data.data);
-          console.log("message", response.data.data);
         })
         .catch((error) => {
           console.error("Error fetching conversation or messages:", error);

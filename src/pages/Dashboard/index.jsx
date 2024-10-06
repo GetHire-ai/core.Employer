@@ -77,7 +77,6 @@ const DashboardPage = () => {
       );
       setAllJobs(Getalljobs?.data?.data);
       const filtd = Getalljobs?.data?.data.filter((job) => job?.JobActive);
-      console.log(filtd);
       setFilteredJobs(filtd);
       setloading(false);
     } catch (error) {
