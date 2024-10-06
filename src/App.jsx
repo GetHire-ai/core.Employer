@@ -11,7 +11,6 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Home from "pages/Home";
 import NotFound from "pages/NotFound";
 import Layout from "Layout";
 import AttendanceHome from "pages/AttendanceHome/AttendanceHome";
@@ -57,7 +56,7 @@ import EditProfile from "pages/Thirtytwo/EditProfile";
 import Notification from "pages/Notification/Notification";
 import { JobsSettings } from "pages/Jobs/JobsLinks";
 import OnboardingProcess from "pages/OnboardingProcess";
-const DashboardThirteen = React.lazy(() => import("pages/DashboardThirteen"));
+const Home = React.lazy(() => import("pages/Home"));
 const DashboardOne = React.lazy(() => import("pages/DashboardOne"));
 const DashboardTwo = React.lazy(() => import("pages/DashboardTwo"));
 const Dashboard = React.lazy(() => import("pages/Dashboard"));
@@ -76,9 +75,7 @@ const Thirtyeight = React.lazy(() => import("pages/Thirtyeight"));
 const Thirtyseven = React.lazy(() => import("pages/Thirtyseven"));
 const Fifteen = React.lazy(() => import("pages/Fifteen"));
 const Wallet = React.lazy(() => import("pages/Wallets"));
-const AllApplications = React.lazy(() =>
-  import("pages/DashboardThirteen/AllApplications")
-);
+const AllApplications = React.lazy(() => import("pages/Home/AllApplications"));
 
 const ProjectRoutes = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -114,7 +111,7 @@ const ProjectRoutes = () => {
               visible={true}
               height="96"
               width="96"
-              color="blue" // Change the color here
+              color="blue" 
               strokeWidth="5"
               animationDuration="0.75"
               ariaLabel="rotating-lines-loading"
@@ -133,10 +130,6 @@ const ProjectRoutes = () => {
                 <Route path="*" element={<Navigate to="/" />} />
                 <Route path="/" element={<Home />} />
                 <Route path="/smartsourcing/:id" element={<SmartSource />} />
-                <Route
-                  path="/dashboardthirteen"
-                  element={<DashboardThirteen />}
-                />
                 {/* <Route path="/chat" element={<DashboardOne />} /> */}
                 <Route path="/chat" element={<Chat />} />
                 <Route path="/activities" element={<DashboardTwo />} />
