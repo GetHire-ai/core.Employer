@@ -3,6 +3,7 @@ import { Button } from "components";
 import React, { useState } from "react";
 import { Navigate, Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import logo from "../../assets/images/logo.svg";
 
 function Login() {
   const navigate = useNavigate();
@@ -82,7 +83,6 @@ function Login() {
         "api/CompanyRoutes/CompanyEmailOtpLoginVerify",
         data
       );
-      console.log(responce?.data);
       localStorage.setItem("companyToken", responce?.data?.token);
       localStorage.setItem("companyid", responce?.data?.user?._id);
       localStorage.setItem("companydata", JSON.stringify(responce?.data?.user));
@@ -203,15 +203,14 @@ function Login() {
         "api/CompanyRoutes/CompanyLoginwithpassword",
         data
       );
-      console.log(responce?.data);
+      toast.success(responce?.data?.message, { autoClose: 1000 });
       localStorage.setItem("companyToken", responce?.data?.token);
       localStorage.setItem("companyid", responce?.data?.data?._id);
       localStorage.setItem("companydata", JSON.stringify(responce?.data?.data));
-      toast.success(responce?.data?.message, { autoClose: 1000 });
       window.location.reload();
       Navigate("/");
     } catch (error) {
-      console.log(error.response.data);
+      toast.error(error.response.data.message, { autoClose: 1000 });
       setError(error.response?.data?.reason || "An error occurred");
     } finally {
       setLoading(false);
@@ -221,12 +220,8 @@ function Login() {
   return (
     <>
       <div className="w-full h-full" style={{ fontFamily: "poppins" }}>
-        <div className="w-full  flex justify-center items-center mb-3 min-h-[12vh]">
-          <img
-            src="https://gethire-student.vercel.app/static/media/Gethire%20SVG.e7e8d00d37dbfe10fc42a63f9eb11af6.svg"
-            alt="logo.."
-            className="max-w-[13rem]"
-          />
+        <div className="w-full  flex justify-center items-center mb-3 min-h-[10vh]">
+          <img src={logo} alt="logo.." className="max-w-[11rem]" />
         </div>
         <div className="bg-gray-100 flex justify-center items-start min-h-[88vh] pt-5">
           <div className="bg-white border rounded-xl p-10 flex flex-col justify-center items-center gap-5">
@@ -246,6 +241,9 @@ function Login() {
                 type="password"
                 value={Password}
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") loginWithPassword();
+                }}
                 className="min-w-[35rem] min-h-[3rem] px-3 font-md text-gray-600 border rounded"
               />
             </div>
@@ -254,14 +252,20 @@ function Login() {
                 <input type="checkbox" className="mr-3" />
                 <span className="cursor-pointer">Remember Me.</span>
               </div>
-              <span onClick={()=>navigate('/forget')} className="text-gray-700 cursor-pointer">Forget Password ?</span>
+              <span
+                onClick={() => navigate("/forget")}
+                className="text-gray-700 cursor-pointer"
+              >
+                Forget Password ?
+              </span>
             </div>
             <div className="flex flex-col w-full justify-center items-start gap-3 mt-5">
               <button
                 className="w-full flex justify-center items-start bg-[#316187] hover:bg-[#289a8n] text-white font-bold text-md py-3 rounded-lg"
                 onClick={loginWithPassword}
+                disabled={loading}
               >
-                Login
+                {loading ? "Loading..." : "Login"}
               </button>
             </div>
             <div className="flex flex-col justify-center items-center my-5">

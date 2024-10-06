@@ -3,6 +3,7 @@ import { Button, Img } from "components";
 import React, { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import logo from "../../assets/images/logo.svg";
 import { GoogleLogin, googleLogout, useGoogleLogin } from "@react-oauth/google";
 
 function Signup() {
@@ -88,7 +89,7 @@ function Signup() {
     if (!Email || !Name || !Number || !Password) {
       setIsSubmit(true);
     }
-
+    setLoading(true);
     // Password validation
     const passwordRegex =
       /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
@@ -127,6 +128,8 @@ function Signup() {
       if (error?.response?.data?.message) {
         toast.error(error.response.data.message);
       }
+    } finally {
+      setLoading(true);
     }
   };
 
@@ -180,11 +183,7 @@ function Signup() {
       <div className="bg-gray-100 flex justify-center items-start min-h-[100vh] pt-5">
         <div className="rounded-xl p-10 flex flex-col justify-center items-center gap-5">
           <div className="w-full  flex justify-start items-center mb-3">
-            <img
-              src="https://gethire-student.vercel.app/static/media/Gethire%20SVG.e7e8d00d37dbfe10fc42a63f9eb11af6.svg"
-              alt="logo.."
-              className="max-w-[13rem]"
-            />
+            <img src={logo} alt="logo.." className="max-w-[13rem]" />
           </div>
           <div className="flex flex-col justify-center items-start gap-1 w-[35rem] mt-10">
             <div className="text-gray-700 text-2xl font-semibold">
@@ -222,24 +221,24 @@ function Signup() {
             </span>
           </div>
         </div>
-        <div className="bg-white border rounded-xl p-10 flex flex-col justify-center items-center gap-5">
+        <div className="bg-white border rounded-xl p-7 flex flex-col justify-center items-center gap-4">
           <h2 className="text-lg text-gray-800">
             Start your trail no credit card required
           </h2>
 
-          <div className="flex justify-between gap-4 w-full">
+          <div className="max-w-[35rem] flex justify-between gap-4 w-full">
             <div className="flex flex-col gap-1 w-1/2">
               <label className="text-gray-700">First Name</label>
               <input
                 type="text"
-                className="w-full min-h-[3rem] px-3 font-md text-gray-600 border rounded"
+                className="w-full min-h-[2.5rem] px-3 font-md text-gray-600 border rounded"
               />
             </div>
             <div className="flex flex-col gap-1 w-1/2">
               <label className="text-gray-700">Last Name</label>
               <input
                 type="text"
-                className="w-full min-h-[3rem] px-3 font-md text-gray-600 border rounded"
+                className="w-full min-h-[2.5rem] px-3 font-md text-gray-600 border rounded"
               />
             </div>
           </div>
@@ -250,7 +249,7 @@ function Signup() {
               type="email"
               value={Email}
               onChange={(e) => setEmail(e.target.value)}
-              className={`min-w-[35rem] min-h-[3rem] px-3 font-md text-gray-600 border rounded ${
+              className={`min-w-[35rem] min-h-[2.5rem] px-3 font-md text-gray-600 border rounded ${
                 isSubmit && Email === "" ? "border-red-500" : "border-gray-300"
               }`}
             />
@@ -261,7 +260,7 @@ function Signup() {
               type="number"
               value={Number}
               onChange={(e) => setNumber(e.target.value)}
-              className={`min-w-[35rem] min-h-[3rem] px-3 font-md text-gray-600 border rounded ${
+              className={`min-w-[35rem] min-h-[2.5rem] px-3 font-md text-gray-600 border rounded ${
                 isSubmit && Number === "" ? "border-red-500" : "border-gray-300"
               }`}
             />
@@ -272,7 +271,7 @@ function Signup() {
               type="text"
               value={Name}
               onChange={(e) => setName(e.target.value)}
-              className={`min-w-[35rem] min-h-[3rem] px-3 font-md text-gray-600 border rounded ${
+              className={`min-w-[35rem] min-h-[2.5rem] px-3 font-md text-gray-600 border rounded ${
                 isSubmit && Name === "" ? "border-red-500" : "border-gray-300"
               }`}
             />
@@ -283,7 +282,7 @@ function Signup() {
               type="text"
               value={website}
               onChange={(e) => setwebsite(e.target.value)}
-              className={`min-w-[35rem] min-h-[3rem] px-3 font-md text-gray-600 border rounded ${
+              className={`min-w-[35rem] min-h-[2.5rem] px-3 font-md text-gray-600 border rounded ${
                 isSubmit && website === ""
                   ? "border-red-500"
                   : "border-gray-300"
@@ -296,7 +295,10 @@ function Signup() {
               type="password"
               value={Password}
               onChange={(e) => setPassword(e.target.value)}
-              className={`min-w-[35rem] min-h-[3rem] px-3 font-md text-gray-600 border rounded ${
+              onKeyDown={(e) => {
+                if (e.key === "Enter") Register();
+              }}
+              className={`min-w-[35rem] min-h-[2.5rem] px-3 font-md text-gray-600 border rounded ${
                 isSubmit && Password === ""
                   ? "border-red-500"
                   : "border-gray-300"
@@ -305,8 +307,9 @@ function Signup() {
           </div>
           <div className="flex flex-col w-full justify-center items-start gap-3 mt-2">
             <button
-              className="w-full flex justify-center items-start bg-[#316187] hover:bg-[#289a8n] text-white font-bold text-md py-3 rounded-lg"
+              className="min-w-[35rem] mx-auto flex justify-center items-start bg-[#316187] hover:bg-[#289a8n] text-white font-bold text-md py-3 rounded-lg"
               onClick={Register}
+              disabled={loading}
             >
               Sign Up
             </button>

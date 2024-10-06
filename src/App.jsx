@@ -265,9 +265,10 @@ const ProjectRoutes = () => {
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="/first" element={<FirstPage />} />
+              {/* <Route path="/first" element={<FirstPage />} /> */}
               <Route path="/forget" element={<Forget />} />
-              <Route path="*" element={<Navigate to="/first" />} />
+              <Route path="*" element={<Navigate to="/login" />} />
+              {/* <Route path="*" element={<Navigate to="/first" />} /> */}
             </Routes>
           )}
         </Router>
