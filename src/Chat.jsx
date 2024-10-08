@@ -98,15 +98,17 @@ const ChatComponent = () => {
 
   const handleStudentClick = async (studentId, student) => {
     try {
-      setSearchQuery("");
-      const response = await GetApi(
-        `api/chatroutes/conversation/${companyId}/${studentId}`
-      );
-      scrollToBottom();
-      setCurrentConversationId(response?.data?.data?._id);
-      setCurrentStudent(student);
-      setMessages([]);
-      setShowOldMessages(false);
+      if (studentId !== currentStudent?._id) {
+        setSearchQuery("");
+        const response = await GetApi(
+          `api/chatroutes/conversation/${companyId}/${studentId}`
+        );
+        scrollToBottom();
+        setCurrentConversationId(response?.data?.data?._id);
+        setCurrentStudent(student);
+        setMessages([]);
+        setShowOldMessages(false);
+      }
     } catch (error) {
       console.error("Error fetching or creating conversation:", error);
     }
@@ -251,9 +253,7 @@ const ChatComponent = () => {
                                 : "bg-gray-200 text-left self-start"
                             }`}
                           >
-                            <div>
-                              {messageText}
-                            </div>
+                            <div>{messageText}</div>
                             <div className="text-sm text-gray-500">
                               {new Date(msg.timestamp).toLocaleTimeString()}
                             </div>
