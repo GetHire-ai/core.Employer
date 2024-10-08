@@ -9,6 +9,7 @@ import "react-circular-progressbar/dist/styles.css";
 import { useNavigate, useParams } from "react-router-dom";
 import FilterScreen from "./FiltersScreen";
 import SuggestedCandidates from "./SuggestedCandidates";
+import { toast } from "react-toastify";
 
 const DashboardTwoPage = () => {
   const navigate = useNavigate();
@@ -111,6 +112,7 @@ const DashboardTwoPage = () => {
 
   const GetShortlistedApplication = async () => {
     try {
+      setLoading(true);
       const res = await GetApi(
         `api/CompanyRoutes/GetAllshortlistStudentsofajob/${id}`
       );
@@ -168,25 +170,27 @@ const DashboardTwoPage = () => {
 
   const ShortlistApplication = async (id) => {
     try {
-      const res = await PutApi(
-        `api/CompanyRoutes/shortlistJobApplication/${id}`
-      );
-      alert("Application Shortlisted");
+      setLoading(true);
+      await PutApi(`api/CompanyRoutes/shortlistJobApplication/${id}`);
+      toast.success("Application Shortlisted", { autoClose: 1000 });
       GetAllApplication();
     } catch (error) {
       setLoading(false);
-      console.log(error.response);
+      GetAllApplication();
+      toast.error("Error In Shortlisting", { autoClose: 1000 });
     }
   };
 
   const RejectApplication = async (id) => {
     try {
+      setLoading(true);
       await PutApi(`api/CompanyRoutes/RejectJobApplication/${id}`);
-      alert("Application Rejected");
+      toast.success("Application Rejected", { autoClose: 1000 });
       GetAllApplication();
     } catch (error) {
       setLoading(false);
-      console.log(error);
+      toast.error("Error In Rejecting", { autoClose: 1000 });
+      GetAllApplication();
     }
   };
 
@@ -265,10 +269,10 @@ const DashboardTwoPage = () => {
           )
         );
       }
-      console.log(filteredList[0]?.StudentId?.Experience);
-      console.log(filteredList[0]?.StudentId?.Expected_Salary);
-      console.log(filteredList[0]?.StudentId?.Current_Salary);
-      console.log(filteredList[0]?.StudentId?.locations);
+      // console.log(filteredList[0]?.StudentId?.Experience);
+      // console.log(filteredList[0]?.StudentId?.Expected_Salary);
+      // console.log(filteredList[0]?.StudentId?.Current_Salary);
+      // console.log(filteredList[0]?.StudentId?.locations);
       setFilterAppl(filteredList);
     };
 
@@ -588,7 +592,8 @@ const DashboardTwoPage = () => {
                                       <button
                                         disabled={
                                           application.isrejected ||
-                                          application.isshortlisted
+                                          application.isshortlisted ||
+                                          loading
                                         }
                                         className="bg-red-50 text-red-500 border-blue-500 rounded p-1 px-3 font-[600] m-1 text-sm"
                                         onClick={() => {
@@ -603,7 +608,8 @@ const DashboardTwoPage = () => {
                                       <button
                                         disabled={
                                           application.isrejected ||
-                                          application.isshortlisted
+                                          application.isshortlisted ||
+                                          loading
                                         }
                                         className="bg-blue-50 text-blue-500 border-blue-500 rounded p-1 px-3 font-[600] m-1 text-sm"
                                         onClick={() => {

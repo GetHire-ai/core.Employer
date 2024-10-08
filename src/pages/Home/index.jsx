@@ -44,7 +44,7 @@ const DashboardThirteenPage = () => {
       const response = await GetApi("api/CompanyRoutes/GetAllJobs");
       setAllJobs(response?.data?.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
   const calculatePercentage = (data) => {
@@ -72,7 +72,7 @@ const DashboardThirteenPage = () => {
       );
       setAllApplication(response?.data?.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -83,7 +83,7 @@ const DashboardThirteenPage = () => {
       );
       setAllinterviewSchedule(response?.data?.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -94,7 +94,7 @@ const DashboardThirteenPage = () => {
       );
       setAllShortlistedStudents(response?.data?.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -103,7 +103,7 @@ const DashboardThirteenPage = () => {
       const response = await GetApi("api/CompanyRoutes/Resultonpending");
       setAllApplicationonhold(response?.data?.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -112,7 +112,7 @@ const DashboardThirteenPage = () => {
       const response = await GetApi("api/CompanyRoutes/GetAllSelectedStudents");
       setAllSelectedStudents(response?.data?.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -121,7 +121,7 @@ const DashboardThirteenPage = () => {
       const response = await GetApi("api/CompanyRoutes/GetAllRejectedStudents");
       setAllRejectedStudents(response?.data?.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -186,7 +186,7 @@ const DashboardThirteenPage = () => {
       setInterviewModal(false);
     } catch (error) {
       setLoading(false);
-      console.log(error.response);
+      console.error(error.response);
     }
   };
 
