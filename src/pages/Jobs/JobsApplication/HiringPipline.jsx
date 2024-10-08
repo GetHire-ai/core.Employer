@@ -172,9 +172,7 @@ const HiringPipline = ({ aiResult, skillsResult, profile, onSkillAverage }) => {
                 </div>
               </div>
               <div className="flex flex-col lg:flex-row justify-center items-center gap-[28px] py-[17px] px-[10px] lg:justify-between">
-                <div className="lg:w-full">
-                  here will show preview of video
-                </div>
+                <div className="lg:w-full">here will show preview of video</div>
                 <div className="flex flex-col w-full gap-[17px]">
                   <div>
                     <p className="text-[11px] font-[400] text-[#818181] font-[Poppins]">
@@ -197,52 +195,14 @@ const HiringPipline = ({ aiResult, skillsResult, profile, onSkillAverage }) => {
                       {currentStage}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-[11px] font-[400] text-[#818181] font-[Poppins]">
-                      Date:
-                    </p>
-                    <p className="text-[11px] font-[500] text-[#000000] font-[Poppins]">
-                      14-16-2023
-                    </p>
-                  </div>
                 </div>
                 <div className="flex w-full flex-col gap-[17px]">
                   <div>
                     <p className="text-[11px] font-[400] text-[#818181] font-[Poppins]">
-                      Assignee:
-                    </p>
-                    <div className="flex gap-[4px]">
-                      <img
-                        src="/images/img_ellipse3978.png"
-                        className="w-[18px] h-[18px] rounded-[50%]"
-                        alt=""
-                      />
-                      <p className="text-[11px] font-[500] text-[#000000] font-[Poppins]">
-                        Andri R. Herdiansyah
-                      </p>
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-[400] text-[#818181] font-[Poppins]">
-                      Owner:
-                    </p>
-                    <div className="flex gap-[4px]">
-                      <img
-                        src="/images/img_ellipse799.png"
-                        className="w-[18px] h-[18px] rounded-[50%]"
-                        alt=""
-                      />
-                      <p className="text-[11px] font-[500] text-[#000000] font-[Poppins]">
-                        Bogus Fikri
-                      </p>
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-[400] text-[#818181] font-[Poppins]">
-                      Skills:
+                      ai evaluation:
                     </p>
                     <p className="text-[11px] font-[500] text-[#000000] font-[Poppins]">
-                      App, Administrative, android, Word press, Design
+                      {aiResult?.aiText}
                     </p>
                   </div>
                 </div>
