@@ -5,7 +5,7 @@ import "react-circular-progressbar/dist/styles.css";
 const HiringPipline = ({ aiResult, skillsResult, profile, onSkillAverage }) => {
   const [currentStage, setCurrentStage] = useState("Skill Assessment");
   const [skillAverage, setSkillAverage] = useState(0);
-
+  // console.log(aiResult, skillsResult);
   let skillMcqAverage = () => {
     if (
       !profile?.StudentId?.Skill_Set ||
@@ -145,17 +145,35 @@ const HiringPipline = ({ aiResult, skillsResult, profile, onSkillAverage }) => {
             </div>
 
             {/* Second sub-div */}
+
             <div className="border border-[#d9d9d9] rounded-md p-1">
-              <div className="flex w-full px-[26px] py-[13px] justify-between items-center">
-                <p className="text-[14px] font-[600]">Detail:</p>
+              <div className="flex w-full px-[26px] py-[13px] justify-between items-start">
+                <p className="text-[14px] font-[600] ml-[-5px]">Skills :</p>
+                <div className="flex flex-col justify-center items-center">
+                  <div>
+                    <p className="text-[14px] pb-[1px] font-[500]">
+                      Video Interview
+                    </p>
+                  </div>
+                  <div style={{ width: 60, height: 60 }}>
+                    <CircularProgressbar
+                      value={skillsResult?.scorePercentage || 0}
+                      text={`${aiResult?.score || 0}%`}
+                      styles={{
+                        path: { stroke: "#4F46E5", strokeWidth: "6px" },
+                        text: {
+                          fill: "#4F46E5",
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                        },
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
               <div className="flex flex-col lg:flex-row justify-center items-center gap-[28px] py-[17px] px-[10px] lg:justify-between">
                 <div className="lg:w-full">
-                  <img
-                    src="/images/img_image69.png"
-                    className="w-[248px] h-[150px] rounded-[10px]"
-                    alt=""
-                  />
+                  here will show preview of video
                 </div>
                 <div className="flex flex-col w-full gap-[17px]">
                   <div>

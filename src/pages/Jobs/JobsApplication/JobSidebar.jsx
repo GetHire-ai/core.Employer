@@ -33,7 +33,7 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
       );
       setSkillsResult(res?.data?.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
   let getAiResult = async () => {
@@ -42,9 +42,8 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
         `api/testRoutes/result/aitestresult/bystudentid/${selectedApplication.StudentId._id}/${selectedApplication?.JobId._id}`
       );
       setAiResult(res?.data?.data);
-      // console.log(res);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
   useEffect(() => {
@@ -457,8 +456,8 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
               <div className="flex flex-col items-center text-center">
                 <div className="w-14 h-14 flex items-center justify-center">
                   <CircularProgressbar
-                    value={skillAverage}
-                    text={`${skillAverage}%`}
+                    value={(skillAverage + aiResult?.score)/2}
+                    text={`${(skillAverage + aiResult?.score)/2}%`}
                     styles={{
                       path: { stroke: "#4F46E5", strokeWidth: "6px" },
                       text: {
@@ -470,8 +469,7 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
                   />
                 </div>
                 <p className="text-sm font-medium text-gray-600 mt-2">
-                  Average Assessment
-                  <br /> Score
+                  Average Score
                 </p>
               </div>
             </div>
