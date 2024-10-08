@@ -115,8 +115,8 @@ const ShortStudentCard = ({ job, index, openModal }) => {
             </div>
             <div style={{ width: 85, height: 85 }}>
               <CircularProgressbar
-                value={skillAverage || 0}
-                text={`${skillAverage || 0}%`}
+                value={job?.avaregeScore || 0}
+                text={`${job?.avaregeScore || 0}%`}
               />
               <div>Ai Score</div>
             </div>

@@ -93,6 +93,9 @@ const DashboardThirteenPage = () => {
         "api/CompanyRoutes/GetAllShortlistedStudents"
       );
       setAllShortlistedStudents(response?.data?.data);
+      // console.log(response?.data?.data[0].skillsTestResult.scorePercentage)
+      // console.log(response?.data?.data[0].aiTestResult.score)
+      // console.log(response?.data?.data[0].avaregeScore)
     } catch (error) {
       console.error(error);
     }
