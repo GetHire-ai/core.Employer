@@ -58,7 +58,7 @@ import { JobsSettings } from "pages/Jobs/JobsLinks";
 import OnboardingProcess from "pages/OnboardingProcess";
 const Home = React.lazy(() => import("pages/Home"));
 const DashboardOne = React.lazy(() => import("pages/DashboardOne"));
-const DashboardTwo = React.lazy(() => import("pages/DashboardTwo"));
+const DashboardTwo = React.lazy(() => import("pages/ApplicationManager"));
 const Dashboard = React.lazy(() => import("pages/Dashboard"));
 const Twentytwo = React.lazy(() => import("pages/Twentytwo"));
 const Twentythree = React.lazy(() => import("pages/Twentythree"));

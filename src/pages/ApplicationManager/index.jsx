@@ -491,8 +491,8 @@ const DashboardTwoPage = () => {
                                       className="pt-5"
                                     >
                                       <CircularProgressbar
-                                        value={84}
-                                        text={`84%`}
+                                        value={application?.averageScore}
+                                        text={`${application?.averageScore}%`}
                                       />
                                     </div>
                                   </div>

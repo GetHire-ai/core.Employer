@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { GetApi } from "Api/Api_Calling";
 import { useNavigate } from "react-router-dom";
-import FilterScreen from "pages/DashboardTwo/FiltersScreen";
+import FilterScreen from "pages/ApplicationManager/FiltersScreen";
 import {
   Table,
   TableBody,
