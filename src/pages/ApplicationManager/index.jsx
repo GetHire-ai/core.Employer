@@ -414,30 +414,6 @@ const DashboardTwoPage = () => {
                 </span>
               </button>
             </div>
-            {/* <div className="flex gap-[10px] ms-auto">
-              <button
-                className={`${
-                  selectedView === "List"
-                    ? " text-[#fff] bg-blue-400"
-                    : "bg-white text-blue-500"
-                } text-[16px] font-[400] p-[5px] px-3 gap-[16px] flex justify-center items-center rounded-[6px]`}
-                onClick={() => setSelectedView("List")}
-              >
-                <FaListUl />
-                List
-              </button>
-              <button
-                className={`${
-                  selectedView === "Board"
-                    ? " text-[#fff] bg-blue-400"
-                    : "bg-white text-blue-500"
-                } text-[16px] font-[400] p-[5px] px-3 gap-[16px] flex justify-center items-center rounded-[6px]`}
-                onClick={() => setSelectedView("Board")}
-              >
-                <img src="images/img_boardsvgrepocom.svg" alt="" />
-                Board
-              </button>
-            </div> */}
           </div>
           <div className="flex gap-2 p-1 flex-grow overflow-hidden max-h-[90vh]">
             <div

@@ -221,7 +221,7 @@ const DashboardThirteenPage = () => {
       </div>
       <div className="flex flex-col w-full mt-[20px] pl-[26px] pr-[32px] sm:flex-row gap-[30px]">
         <div className="flex flex-col gap-[16px] w-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-2">
             {/* Job Posts */}
             <div
               className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 cursor-pointer"
@@ -455,8 +455,8 @@ const DashboardThirteenPage = () => {
             <RecentJobPost />
           </div>
         </div>
-        <div className="flex flex-col gap-[12px] w-full">
-          <div className="bg-white rounded-[20px] py-[14px] px-[13px] ">
+        <div className="flex flex-col gap-[1px] w-full pt-2">
+          <div className="bg-white rounded-[10px] py-[14px] px-[13px] min-h-[70vh]">
             <UpcomingInterview
               AllShortlistedStudents={AllShortlistedStudents}
               openModal={(id) => {

@@ -57,6 +57,7 @@ const ChatComponent = () => {
         ...prevUsers,
         [userId]: online,
       }));
+      console.log("onlineusers", userId);
     });
 
     return () => {
@@ -90,6 +91,7 @@ const ChatComponent = () => {
         senderType: "Company",
         message,
       };
+      
       socket.emit("sendMessage", data);
       setMessage("");
       scrollToBottom();
@@ -98,6 +100,13 @@ const ChatComponent = () => {
 
   const handleStudentClick = async (studentId, student) => {
     try {
+      socket.on("userStatus", ({ userId, online }) => {
+        setOnlineUsers((prevUsers) => ({
+          ...prevUsers,
+          [userId]: online,
+        }));
+        console.log("onlineusers", userId);
+      });
       if (studentId !== currentStudent?._id) {
         setSearchQuery("");
         const response = await GetApi(
@@ -142,7 +151,10 @@ const ChatComponent = () => {
 
   return (
     <div className="flex">
-      <div className="w-1/4 bg-gray-100 border-r border-gray-300 p-4 overflow-y-auto">
+      <div
+        className="w-1/4 bg-gray-100 border-r border-gray-300 p-4 overflow-y-auto"
+        style={{ overflow: "none" }}
+      >
         <h2 className="text-xl font-semibold mb-4">Students</h2>
         {loadingStudents ? (
           // <p>Loading students...</p>
