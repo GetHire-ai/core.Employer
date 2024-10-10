@@ -736,7 +736,7 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.15.349/build/pdf.worker.min.js">
                   <Viewer
                     fileUrl={
-                      selectedApplication?.Custom_resume ||
+                      selectedApplication?.resumeFile ||
                       "https://www.google.com/imgres?q=an%20empty%20resume%20template%20url&imgurl=https%3A%2F%2Fwww.visualcv.com%2Fstatic%2Fe13418f335d7a11df6a860747db880a7%2Fa12ab%2FBlank_Resume_Template_-_ATS.png&imgrefurl=https%3A%2F%2Fwww.visualcv.com%2Fresume-templates%2Fblank-resume-templates%2F&docid=y59Y-0IP8M8gpM&tbnid=rdawpfL51Ys7AM&vet=12ahUKEwis-KWSuJOIAxWBwTgGHa8CJsoQM3oECGUQAA..i&w=760&h=704&hcb=2&ved=2ahUKEwis-KWSuJOIAxWBwTgGHa8CJsoQM3oECGUQAA"
                     }
                     plugins={[defaultLayoutPlugin]}
