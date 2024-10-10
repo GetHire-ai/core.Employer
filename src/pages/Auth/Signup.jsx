@@ -129,7 +129,7 @@ function Signup() {
         toast.error(error.response.data.message);
       }
     } finally {
-      setLoading(true);
+      setLoading(false);
     }
   };
 

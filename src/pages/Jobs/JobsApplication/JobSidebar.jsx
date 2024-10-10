@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import HireSidebar from "./../../Twentyseven/HireSidebar";
 
 function JobSidebar({ side1, openSideBar, selectedApplication }) {
+  console.log(selectedApplication);
   const navigate = useNavigate();
   const [openDropdownIndex, setOpenDropdownIndex] = useState(false);
   const [buttonN, setButtonN] = useState("Details");
@@ -456,8 +457,8 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
               <div className="flex flex-col items-center text-center">
                 <div className="w-14 h-14 flex items-center justify-center">
                   <CircularProgressbar
-                    value={(skillAverage + aiResult?.score)/2}
-                    text={`${(skillAverage + aiResult?.score)/2}%`}
+                    value={(skillAverage + aiResult?.score) / 2}
+                    text={`${(skillAverage + aiResult?.score) / 2}%`}
                     styles={{
                       path: { stroke: "#4F46E5", strokeWidth: "6px" },
                       text: {

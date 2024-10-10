@@ -39,13 +39,12 @@ const experienceOptionsYears = [
 ];
 
 const educationOptions = [
-  "10",
-  "12",
-  "diploma",
-  "iti",
-
-  "UnderGraduate",
-  "PostGraduate",
+  { label: "10", value: "10th Pass" },
+  { label: "12", value: "12th Pass" },
+  { label: "diploma", value: "Diploma" },
+  { label: "iti", value: "ITI" },
+  { label: "UnderGraduate", value: "Graduate" },
+  { label: "PostGraduate", value: "Post Graduate" },
 ];
 
 const graduateOptions = ["BCA", "BBA", "B.Sc", "B.Com", "B.Tech"];
@@ -59,7 +58,11 @@ const salaryOptions = [
   { label: "5 lac", value: 500000 },
 ];
 
-const englishLevelOptions = ["noEnglish", "basicEnglish", "goodEnglish"];
+const englishLevelOptions = [
+  { label: "No English", value: "noEnglish" },
+  { label: "Basic English", value: "basicEnglish" },
+  { label: "Good English", value: "goodEnglish" },
+];
 
 const experienceOptions = ["any", "experiencedOnly", "fresherOnly"];
 
@@ -336,13 +339,13 @@ const JobCreateManual = () => {
     </div>
   );
 
-  const CreateNewJob = async (navigatePath="/jobs") => {
+  const CreateNewJob = async (navigatePath = "/jobs") => {
     setOpenPayModal(false);
     try {
       setLoading(true);
       const responce = await PostApi("api/CompanyRoutes/CreateJob", JobData);
       toast.success(responce?.data?.message, { autoClose: 1000 });
-      navigate(navigatePath);
+      navigate('/jobs');
     } catch (error) {
       toast.error(error?.response?.data?.message, { autoClose: 1000 });
       console.log(error);
@@ -450,11 +453,11 @@ const JobCreateManual = () => {
   const fetchCitySuggestions = async (input) => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `https://api.teleport.org/api/cities/?search=${input}`
-      );
-      console.log(response);
-      setCitySuggestions(response.data._embedded["city:search-results"]);
+      // const response = await axios.get(
+      //   `https://api.teleport.org/api/cities/?search=${input}`
+      // );
+      // console.log(response);
+      // setCitySuggestions(response.data._embedded["city:search-results"]);
     } catch (error) {
       console.error(error);
     } finally {
@@ -541,7 +544,7 @@ const JobCreateManual = () => {
     }));
 
     if (input.trim() !== "") {
-      fetchCitySuggestions(input);
+      // fetchCitySuggestions(input);
     } else {
       setCitySuggestions([]);
     }
@@ -908,7 +911,7 @@ const JobCreateManual = () => {
                   </div>
                 )}
 
-{JobData.jobType !== "remote" && (
+                {JobData.jobType !== "remote" && (
                   <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700">
                       City<span className="text-red-600 text-md ml-1">*</span>
@@ -993,8 +996,6 @@ const JobCreateManual = () => {
                     {JobData?.shift === "" && formSubmitted && "Please Select"}
                   </span>
                 </div>
-                
-                
 
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center gap-4">
@@ -1264,11 +1265,16 @@ const JobCreateManual = () => {
                     >
                       <Autocomplete
                         options={educationOptions}
-                        value={JobData?.minEducation}
+                        getOptionLabel={(option) => option.value} // Display the option value
+                        value={
+                          educationOptions.find(
+                            (option) => option.value === JobData?.minEducation
+                          ) || null
+                        } // Find the current value
                         onChange={(event, newValue) =>
                           setJobData((prev) => ({
                             ...prev,
-                            minEducation: newValue,
+                            minEducation: newValue ? newValue.value : "", // Store the selected value or an empty string
                           }))
                         }
                         renderInput={(params) => (
@@ -1280,7 +1286,7 @@ const JobCreateManual = () => {
                         )}
                       />
                       {JobData?.minEducation === "" && formSubmitted && (
-                        <FormHelperText>Please Select</FormHelperText>
+                        <FormHelperText>Please select</FormHelperText>
                       )}
                     </FormControl>
                   </div>
@@ -1362,11 +1368,16 @@ const JobCreateManual = () => {
                     >
                       <Autocomplete
                         options={englishLevelOptions}
-                        value={JobData?.englishLevel}
+                        getOptionLabel={(option) => option.label} // Display the label in the dropdown
+                        value={
+                          englishLevelOptions.find(
+                            (option) => option.value === JobData?.englishLevel
+                          ) || null
+                        } // Find the current value
                         onChange={(event, newValue) =>
                           setJobData((prev) => ({
                             ...prev,
-                            englishLevel: newValue,
+                            englishLevel: newValue ? newValue.value : "", // Store the selected value or an empty string
                           }))
                         }
                         renderInput={(params) => (
@@ -1378,7 +1389,7 @@ const JobCreateManual = () => {
                         )}
                       />
                       {JobData?.englishLevel === "" && formSubmitted && (
-                        <FormHelperText>Please Select</FormHelperText>
+                        <FormHelperText>Please select</FormHelperText>
                       )}
                     </FormControl>
                   </div>
@@ -2328,17 +2339,21 @@ const JobCreateManual = () => {
                                     </span> */}
                                     {skill?.type === "skill" && (
                                       <>
-                                        {skill.skill}
-                                        {!skill?.skill && (
+                                        {skill?.skill}
+                                        {skill?.skill === "" && (
                                           <FormControl
                                             variant="outlined"
                                             className="form-select p-2 m-1 w-1/2"
                                           >
-                                            <InputLabel id={"skill-select-label-"+index}>
+                                            <InputLabel
+                                              id={"skill-select-label-" + index}
+                                            >
                                               Select
                                             </InputLabel>
                                             <Select
-                                              labelId={"skill-select-label-"+index}
+                                              labelId={
+                                                "skill-select-label-" + index
+                                              }
                                               value={
                                                 assessmentSkills[index]
                                                   ?.skill || ""
@@ -2362,16 +2377,23 @@ const JobCreateManual = () => {
                                               <MenuItem value="">
                                                 <em>Select</em>
                                               </MenuItem>
-                                              {JobData?.skillsRequired?.map(
-                                                (skill, idx) => (
+                                              {JobData?.skillsRequired
+                                                ?.filter(
+                                                  (skill) =>
+                                                    !assessmentSkills.some(
+                                                      (assessment) =>
+                                                        assessment.skill ===
+                                                        skill
+                                                    ) // Filter out selected skills
+                                                )
+                                                .map((skill, idx) => (
                                                   <MenuItem
                                                     key={idx}
                                                     value={skill}
                                                   >
                                                     {skill}
                                                   </MenuItem>
-                                                )
-                                              )}
+                                                ))}
                                             </Select>
                                           </FormControl>
                                         )}
@@ -2512,7 +2534,7 @@ const JobCreateManual = () => {
                                         setAssessmentSkills(newSkills);
                                         setJobData((prev) => ({
                                           ...prev,
-                                          skillAssessment: assessmentSkills,
+                                          skillAssessment: newSkills,
                                         }));
                                       }}
                                     >
@@ -2527,13 +2549,14 @@ const JobCreateManual = () => {
                             className="text-blue-500 px-3"
                             onClick={() => {
                               setAssessmentSkills((prev) => [
-                                ...assessmentSkills,
-                                { skill: "", mustHave: false },
+                                ...prev,
+                                { type: "skill", skill: "", mustHave: false },
                               ]);
                               setJobData((prev) => ({
                                 ...prev,
                                 skillAssessment: assessmentSkills,
                               }));
+                              console.log(assessmentSkills);
                             }}
                           >
                             Add Skills
