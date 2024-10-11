@@ -70,7 +70,6 @@ const DashboardTwoPage = () => {
   const GetAllApplication = async () => {
     try {
       const res = await GetApi(`api/CompanyRoutes/GetAllStudentsofajob/${id}`);
-      console.log(res.data.data[0]);
       setAllApplication(res?.data?.data);
       setFilterAppl(res?.data?.data);
       setLoading(false);
@@ -453,7 +452,6 @@ const DashboardTwoPage = () => {
                                         value={application?.avaregeScore}
                                         text={`${application?.avaregeScore}%`}
                                       />
-                                      <>{application?.avaregeScore}</>
                                     </div>
                                   </div>
                                 </div>
