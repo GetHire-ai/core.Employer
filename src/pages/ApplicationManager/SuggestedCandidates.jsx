@@ -1,23 +1,25 @@
-import { GetApi, PostApi } from "Api/Api_Calling";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { GetApi } from "Api/Api_Calling";
+import { toast } from "react-toastify";
 
 const SuggestedCandidates = ({ job, candidates }) => {
-  const handleInvite = async (data) => {
+  const handleInvite = async (id) => {
     try {
-      let res = await GetApi(
-        `api/CompanyRoutes/getinvited/invite/${job._id}/${data}`
-      );
-      console.log(res);
+      await GetApi(`api/CompanyRoutes/getinvited/invite/${job._id}/${id}`);
+      toast.success("candidate invitation sent ", { autoClose: 1000 });
     } catch (error) {
-      console.log(error);
+      toast.error("candidate invitation failed ", { autoClose: 1000 });
+      console.log(error.response);
     }
   };
 
   const handleNotInvite = async (id) => {
     try {
-      console.log(id, job._id);
+      await GetApi(`api/CompanyRoutes/getinvited/notintrest/${job._id}/${id}`);
+      toast.success("candidate rejected ", { autoClose: 1000 });
     } catch (error) {
-      console.log(error);
+      toast.error("candidate rejected failed ", { autoClose: 1000 });
+      console.log(error.response);
     }
   };
 
