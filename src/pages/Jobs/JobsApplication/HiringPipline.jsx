@@ -1,35 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
-const HiringPipline = ({ aiResult, skillsResult, profile, onSkillAverage }) => {
+const HiringPipline = ({ aiResult, profile }) => {
   const [currentStage, setCurrentStage] = useState("Skill Assessment");
-  const [skillAverage, setSkillAverage] = useState(0);
-  // console.log(aiResult, skillsResult);
-  let skillMcqAverage = () => {
-    if (
-      !profile?.StudentId?.Skill_Set ||
-      profile.StudentId.Skill_Set.length === 0
-    ) {
-      console.log("No skills available");
-      return;
-    }
-
-    let total = 0;
-    profile.StudentId.Skill_Set.forEach((skill) => {
-      total += skill?.score || 0;
-    });
-    let averageSkillScore = total / profile.StudentId.Skill_Set.length;
-    let assessmentScore = skillsResult?.scorePercentage || 0;
-    let weightedAverage = 0.4 * averageSkillScore + 0.6 * assessmentScore;
-    setSkillAverage(weightedAverage);
-    onSkillAverage(weightedAverage);
-    return weightedAverage;
-  };
-
-  useEffect(() => {
-    skillMcqAverage();
-  }, []);
 
   const handleStageClick = (stage) => {
     setCurrentStage(stage);
@@ -101,8 +75,8 @@ const HiringPipline = ({ aiResult, skillsResult, profile, onSkillAverage }) => {
                   </div>
                   <div style={{ width: 60, height: 60 }}>
                     <CircularProgressbar
-                      value={skillsResult?.scorePercentage || 0}
-                      text={`${skillsResult?.scorePercentage || 0}%`}
+                      value={profile?.skillsTestResult || 0}
+                      text={`${profile?.skillsTestResult || 0}%`}
                       styles={{
                         path: { stroke: "#4F46E5", strokeWidth: "6px" },
                         text: {
@@ -117,7 +91,7 @@ const HiringPipline = ({ aiResult, skillsResult, profile, onSkillAverage }) => {
               </div>
               <span className="text-gray-800 text-md ml-3 mt-2 flex flex-wrap gap-3">
                 <div className="w-full flex flex-wrap gap-5">
-                  {profile?.StudentId?.Skill_Set?.map((skill) => (
+                  {profile?.skillsTestDetails?.map((skill) => (
                     <div className="flex flex-col justify-start items-center mx-2">
                       <div style={{ width: 60, height: 60 }}>
                         <CircularProgressbar
@@ -135,7 +109,7 @@ const HiringPipline = ({ aiResult, skillsResult, profile, onSkillAverage }) => {
                       </div>
                       <div className="max-w-[3rem] flex flex-wrap">
                         <p className="text-[14px] pb-[19px] font-[500]">
-                          {skill?.Skill}
+                          {skill?.skill}
                         </p>
                       </div>
                     </div>
@@ -148,7 +122,9 @@ const HiringPipline = ({ aiResult, skillsResult, profile, onSkillAverage }) => {
 
             <div className="border border-[#d9d9d9] rounded-md p-1">
               <div className="flex w-full px-[26px] py-[13px] justify-between items-start">
-                <p className="text-[14px] font-[600] ml-[-5px]">Skills :</p>
+                <p className="text-[14px] font-[600] ml-[-5px]">
+                  Video Interview :
+                </p>
                 <div className="flex flex-col justify-center items-center">
                   <div>
                     <p className="text-[14px] pb-[1px] font-[500]">
@@ -157,8 +133,8 @@ const HiringPipline = ({ aiResult, skillsResult, profile, onSkillAverage }) => {
                   </div>
                   <div style={{ width: 60, height: 60 }}>
                     <CircularProgressbar
-                      value={skillsResult?.scorePercentage || 0}
-                      text={`${aiResult?.score || 0}%`}
+                      value={profile?.aiTestResult?.score || 0}
+                      text={`${profile?.aiTestResult?.score || 0}%`}
                       styles={{
                         path: { stroke: "#4F46E5", strokeWidth: "6px" },
                         text: {

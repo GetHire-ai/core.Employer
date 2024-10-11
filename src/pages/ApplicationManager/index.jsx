@@ -70,26 +70,9 @@ const DashboardTwoPage = () => {
   const GetAllApplication = async () => {
     try {
       const res = await GetApi(`api/CompanyRoutes/GetAllStudentsofajob/${id}`);
-      // console.log(res.data.data[0].StudentId.JobDetails);
-      const usersWithAverageScores = res.data.data.map((user) => {
-        const totalScore = user.assessment.reduce(
-          (sum, assessment) => sum + assessment.scorePercentage,
-          0
-        );
-        const averageScore = totalScore / user.assessment.length;
-        return {
-          ...user,
-          averageScore: averageScore,
-        };
-      });
-      const rankedUsers = usersWithAverageScores
-        .sort((a, b) => b.averageScore - a.averageScore)
-        .map((user, index) => ({
-          ...user,
-          rank: index + 1,
-        }));
-      setAllApplication(rankedUsers);
-      setFilterAppl(rankedUsers);
+      console.log(res.data.data[0]);
+      setAllApplication(res?.data?.data);
+      setFilterAppl(res?.data?.data);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -467,9 +450,10 @@ const DashboardTwoPage = () => {
                                       className="pt-5"
                                     >
                                       <CircularProgressbar
-                                        value={application?.averageScore}
-                                        text={`${application?.averageScore}%`}
+                                        value={application?.avaregeScore}
+                                        text={`${application?.avaregeScore}%`}
                                       />
+                                      <>{application?.avaregeScore}</>
                                     </div>
                                   </div>
                                 </div>
@@ -525,14 +509,14 @@ const DashboardTwoPage = () => {
                                   Skills
                                 </span>
                                 <span className="text-gray-800  text-md ml-3 flex flex-wrap gap-3">
-                                  {application?.StudentId?.Skill_Set?.map(
+                                  {application?.skillsTestDetails?.map(
                                     (skill) => (
                                       <div className="py-1 px-3 bg-blue-300 rounded-3xl text-white mx-2 flex items-center">
                                         <span className="bg-blue-500 rounded-full w-8 h-8 flex items-center justify-center text-sm">
                                           {skill?.score}%
                                         </span>
                                         <span className="ml-2">
-                                          {skill?.Skill}
+                                          {skill?.skill}
                                         </span>
                                       </div>
                                     )

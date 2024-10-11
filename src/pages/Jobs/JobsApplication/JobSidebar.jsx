@@ -16,7 +16,6 @@ import { toast } from "react-toastify";
 import HireSidebar from "./../../Twentyseven/HireSidebar";
 
 function JobSidebar({ side1, openSideBar, selectedApplication }) {
-  console.log(selectedApplication);
   const navigate = useNavigate();
   const [openDropdownIndex, setOpenDropdownIndex] = useState(false);
   const [buttonN, setButtonN] = useState("Details");
@@ -457,8 +456,8 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
               <div className="flex flex-col items-center text-center">
                 <div className="w-14 h-14 flex items-center justify-center">
                   <CircularProgressbar
-                    value={(skillAverage + aiResult?.score) / 2}
-                    text={`${(skillAverage + aiResult?.score) / 2}%`}
+                    value={selectedApplication?.avaregeScore || 0}
+                    text={`${selectedApplication?.avaregeScore || 0}%`}
                     styles={{
                       path: { stroke: "#4F46E5", strokeWidth: "6px" },
                       text: {
@@ -733,7 +732,7 @@ function JobSidebar({ side1, openSideBar, selectedApplication }) {
             <div className="px-[27px] bg-white h-screen flex flex-col overflow-y-scroll w-full pt-[20px] pb-[250px] gap-[20px]">
               <p className="text-[14px] font-[600]">Resume</p>
               <div>
-                <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.15.349/build/pdf.worker.min.js">
+                <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.min.js">
                   <Viewer
                     fileUrl={
                       selectedApplication?.resumeFile ||
