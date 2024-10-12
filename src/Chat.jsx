@@ -68,6 +68,18 @@ const ChatComponent = () => {
   }, []);
 
   useEffect(() => {
+    socket.emit("getConversations", companyId);
+    socket.on("conversationsList", (conversations) => {
+      // setConversations(conversations);
+      console.log(conversations);
+    });
+
+    return () => {
+      socket.off("conversationsList");
+    };
+  }, [companyId]);
+
+  useEffect(() => {
     if (currentConversationId) {
       socket.emit("joinConversation", currentConversationId);
       getMessages(currentConversationId);
@@ -91,7 +103,7 @@ const ChatComponent = () => {
         senderType: "Company",
         message,
       };
-      
+
       socket.emit("sendMessage", data);
       setMessage("");
       scrollToBottom();
