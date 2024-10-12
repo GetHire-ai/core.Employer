@@ -1,11 +1,9 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import { format } from "date-fns";
 import { Hourglass } from "react-loader-spinner";
-import { useNavigate } from "react-router-dom";
-import useSocket from "./useSocket"; // Adjust the import path if necessary
+import useSocket from "./useSocket";
 
 const ChatComponent = () => {
-  const navigate = useNavigate();
   const companyId = localStorage.getItem("companyid");
   const messagesEndRef = useRef(null);
   const [message, setMessage] = useState("");
@@ -225,13 +223,13 @@ const ChatComponent = () => {
             </div>
           )}
         </div>
-        <div className="border-gray-300 fixed bottom-10 w-full flex items-center">
+        <div className="border-gray-300 fixed bottom-10 w-3/4 mx-auto flex items-center justify-center">
           <input
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1 p-2 border rounded-lg"
+            className="p-2 border rounded-lg w-3/4"
           />
           <button
             onClick={sendMessage}
