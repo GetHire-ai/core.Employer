@@ -1,12 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
-import io from "socket.io-client";
-import { GetApi } from "Api/Api_Calling";
-import { useMemo } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import { format } from "date-fns";
-import { Hourglass, ThreeDots } from "react-loader-spinner";
+import { Hourglass } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
-const url = process.env.REACT_APP_BACKEND_URL;
-const socket = io(url, { withCredentials: true });
+import useSocket from "./useSocket"; // Adjust the import path if necessary
+
 const ChatComponent = () => {
   const navigate = useNavigate();
   const companyId = localStorage.getItem("companyid");
@@ -14,86 +11,52 @@ const ChatComponent = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [students, setStudents] = useState([]);
+  const [conversations, setConversations] = useState([]);
   const [currentConversationId, setCurrentConversationId] = useState(null);
   const [currentStudent, setCurrentStudent] = useState(null);
-  const [loadingStudents, setLoadingStudents] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [showOldMessages, setShowOldMessages] = useState(false);
-  const [onlineUsers, setOnlineUsers] = useState({});
-
-  const getStudents = async () => {
-    try {
-      const response = await GetApi("api/adminroutes/GetAllStudents");
-      setStudents(response.data.data);
-    } catch (error) {
-      console.error("Error fetching students:", error);
-    } finally {
-      setLoadingStudents(false);
-    }
-  };
-
-  const getMessages = async (conversationId) => {
-    try {
-      setLoadingMessages(true);
-      const response = await GetApi(
-        `api/chatroutes/conversations/${conversationId}/messages`
-      );
-      setMessages(response?.data?.data);
-      scrollToBottom();
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-    } finally {
-      setLoadingMessages(false);
-    }
-  };
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const socket = useSocket(companyId);
 
   useEffect(() => {
-    getStudents();
-    socket.emit("userConnected", companyId);
-
     socket.on("userStatus", ({ userId, online }) => {
-      setOnlineUsers((prevUsers) => ({
-        ...prevUsers,
-        [userId]: online,
-      }));
-      console.log("onlineusers", userId);
+      setOnlineUsers((prevUsers) => {
+        const updatedUsers = prevUsers.filter((user) => user.userId !== userId);
+        if (online) {
+          updatedUsers.push({ userId, online });
+        }
+        return updatedUsers;
+      });
     });
 
-    return () => {
-      socket.emit("userDisconnected");
-      socket.off("userStatus");
-      socket.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
     socket.emit("getConversations", companyId);
+
     socket.on("conversationsList", (conversations) => {
-      // setConversations(conversations);
-      console.log(conversations);
+      setConversations(conversations);
     });
 
     return () => {
+      socket.off("userStatus");
       socket.off("conversationsList");
     };
-  }, [companyId]);
+  }, [socket, companyId]);
 
   useEffect(() => {
     if (currentConversationId) {
       socket.emit("joinConversation", currentConversationId);
-      getMessages(currentConversationId);
-
-      socket.on("receiveMessage", (newMessage) => {
+      const handleNewMessage = (newMessage) => {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
-        scrollToBottom();
-      });
+        scrollToBottom(); // Scroll to the bottom when a new message is received
+      };
+
+      socket.on("receiveMessage", handleNewMessage);
 
       return () => {
-        socket.off("receiveMessage");
+        socket.off("receiveMessage", handleNewMessage);
       };
     }
-  }, [currentConversationId]);
+  }, [currentConversationId, socket]);
 
   const sendMessage = () => {
     if (message.trim() && currentConversationId) {
@@ -103,35 +66,48 @@ const ChatComponent = () => {
         senderType: "Company",
         message,
       };
-
       socket.emit("sendMessage", data);
+      setTimeout(() => {
+        socket.emit("getConversationMessages", currentConversationId);
+        socket.emit("getConversations", companyId);
+        socket.on("receiveMessage", (chatMessages, conversation) => {
+          setConversations((prev) =>
+            prev.map((oldConversation) =>
+              oldConversation._id === conversation._id
+                ? { ...oldConversation, ...conversation }
+                : oldConversation
+            )
+          );
+        });
+      }, 100);
       setMessage("");
       scrollToBottom();
     }
   };
 
-  const handleStudentClick = async (studentId, student) => {
+  const handleStudentClick = async (studentId, student, conversation) => {
+    if (studentId !== currentStudent?._id) {
+      setSearchQuery("");
+      scrollToBottom();
+      setCurrentConversationId(conversation?._id);
+      setCurrentStudent(student);
+      setMessages([]);
+      setShowOldMessages(false);
+    }
     try {
-      socket.on("userStatus", ({ userId, online }) => {
-        setOnlineUsers((prevUsers) => ({
-          ...prevUsers,
-          [userId]: online,
-        }));
-        console.log("onlineusers", userId);
+      setLoadingMessages(true);
+      socket.emit("getConversationMessages", conversation._id);
+
+      socket.on("conversationMessages", (response) => {
+        if (response) {
+          setMessages(response);
+          scrollToBottom();
+        }
       });
-      if (studentId !== currentStudent?._id) {
-        setSearchQuery("");
-        const response = await GetApi(
-          `api/chatroutes/conversation/${companyId}/${studentId}`
-        );
-        scrollToBottom();
-        setCurrentConversationId(response?.data?.data?._id);
-        setCurrentStudent(student);
-        setMessages([]);
-        setShowOldMessages(false);
-      }
     } catch (error) {
-      console.error("Error fetching or creating conversation:", error);
+      console.error("Error fetching messages via socket:", error);
+    } finally {
+      setLoadingMessages(false);
     }
   };
 
@@ -139,19 +115,6 @@ const ChatComponent = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const loadOldMessages = () => {
-    setShowOldMessages(false);
-  };
-
-  // Filter students based on search query
-  const filteredStudents = students.filter(
-    (student) =>
-      student.Name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      student.Email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // -------------------------------------------------
-  // for message formate correction
   const groupedMessages = useMemo(() => {
     return messages?.reduce((acc, msg) => {
       const date = format(new Date(msg.timestamp), "yyyy-MM-dd");
@@ -161,60 +124,56 @@ const ChatComponent = () => {
     }, {});
   }, [messages]);
 
+  const isUserOnline = (studentId) => {
+    return onlineUsers.some((user) => user.userId === studentId);
+  };
+
   return (
     <div className="flex">
-      <div
-        className="w-1/4 bg-gray-100 border-r border-gray-300 p-4 overflow-y-auto"
-        style={{ overflow: "none" }}
-      >
+      <div className="w-1/4 bg-gray-100 border-r border-gray-300 p-4 overflow-y-auto">
         <h2 className="text-xl font-semibold mb-4">Students</h2>
-        {loadingStudents ? (
-          // <p>Loading students...</p>
-          <p className="flex justify-center mt-44">
-            <ThreeDots
-              visible={true}
-              height="80"
-              width="80"
-              color="blue"
-              radius="9"
-              ariaLabel="three-dots-loading"
-              wrapperStyle={{}}
-              wrapperClass=""
-            />
-          </p>
-        ) : (
-          <ul>
-            <li>
-              <input
-                type="text"
-                placeholder="Search by name or email"
-                className="flex-1 p-2 border rounded-lg"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+        <input
+          type="text"
+          placeholder="Search by name or email"
+          className="flex-1 p-2 border rounded-lg mb-2"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <ul>
+          {conversations?.map((conversation) => (
+            <li
+              key={conversation?._id}
+              className={`p-2 hover:bg-gray-200 mt-1 cursor-pointer rounded-lg 
+                                    ${searchQuery !== "" ? "font-semibold" : ""}
+                                    ${
+                                      conversation?._id === currentStudent?._id
+                                        ? "bg-gray-200 font-semibold"
+                                        : ""
+                                    }
+                                    `}
+              onClick={() =>
+                handleStudentClick(
+                  conversation?.participantDetails?.student?._id,
+                  conversation?.participantDetails?.student,
+                  conversation
+                )
+              }
+            >
+              {conversation?.participantDetails?.student?.Name}
+              <br />
+              <span className="text-sm font-semibold text-gray-500">
+                {conversation?.lastMessage?.senderType === "Company"
+                  ? "You : "
+                  : `${conversation?.lastMessage?.student?.Name || ""}`}
+                {conversation?.lastMessage?.message || ""}
+                {conversation?.lastMessage?.lastMessageTime || ""}
+              </span>
+              {isUserOnline(conversation?.participantDetails?.student?._id) && (
+                <span className="ml-2 text-green-500">●</span>
+              )}
             </li>
-            {filteredStudents.map((student) => (
-              <li
-                key={student._id}
-                className={`p-2 hover:bg-gray-200 mt-1 cursor-pointer rounded-lg 
-                    ${searchQuery !== "" ? "font-semibold" : ""}
-                    ${
-                      student._id === currentStudent?._id
-                        ? "bg-gray-200 font-semibold"
-                        : ""
-                    }`}
-                onClick={() => handleStudentClick(student._id, student)}
-              >
-                {student.Name}
-                {onlineUsers[student._id] ? (
-                  <span className="ml-2 text-green-500">●</span>
-                ) : (
-                  <></>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
+          ))}
+        </ul>
       </div>
       <div className="w-3/4 flex flex-col h-full relative">
         {currentStudent && (
@@ -225,28 +184,17 @@ const ChatComponent = () => {
         )}
         <div className="flex-1 p-4 overflow-y-auto mb-20 bg-gray-100 max-h-[73vh]">
           {loadingMessages ? (
-            // <p className="mx-auto">Loading messages...</p>
             <p className="mx-auto flex justify-center items-center mt-44 ">
               <Hourglass
                 visible={true}
                 height="30"
                 width="30"
                 ariaLabel="hourglass-loading"
-                wrapperStyle={{}}
-                wrapperClass=""
                 colors={["#306cce", "#72a1ed"]}
               />
             </p>
           ) : (
             <div className="messages flex flex-col">
-              {showOldMessages && (
-                <button
-                  onClick={loadOldMessages}
-                  className="text-blue-500 mb-2 self-center"
-                >
-                  Load older messages
-                </button>
-              )}
               {Object.keys(groupedMessages)
                 .sort((a, b) => new Date(a) - new Date(b))
                 .map((date, index) => (
@@ -255,35 +203,21 @@ const ChatComponent = () => {
                       {format(new Date(date), "MMMM d, yyyy")}
                     </div>
                     <div className="flex flex-col gap-2">
-                      {groupedMessages[date].map((msg, msgIndex) => {
-                        const linkPattern = /"([^"]+)"/;
-                        const match = msg.message.match(linkPattern);
-                        const link = match ? match[1] : null;
-                        const messageText = msg.message
-                          .replace(linkPattern, "")
-                          .trim();
-                        const handleApplyClick = () => {
-                          if (link) {
-                            navigate(link);
-                          }
-                        };
-
-                        return (
-                          <div
-                            key={msgIndex}
-                            className={`p-2 rounded-lg inline-block max-w-xs ${
-                              msg.senderId === companyId
-                                ? "bg-blue-200 self-end text-right"
-                                : "bg-gray-200 text-left self-start"
-                            }`}
-                          >
-                            <div>{messageText}</div>
-                            <div className="text-sm text-gray-500">
-                              {new Date(msg.timestamp).toLocaleTimeString()}
-                            </div>
+                      {groupedMessages[date].map((msg, msgIndex) => (
+                        <div
+                          key={msgIndex}
+                          className={`p-2 rounded-lg inline-block max-w-xs ${
+                            msg.senderId === companyId
+                              ? "bg-blue-200 self-end text-right"
+                              : "bg-gray-200 text-left self-start"
+                          }`}
+                        >
+                          <div>{msg.message}</div>
+                          <div className="text-sm text-gray-500">
+                            {new Date(msg.timestamp).toLocaleTimeString()}
                           </div>
-                        );
-                      })}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 ))}
@@ -291,13 +225,13 @@ const ChatComponent = () => {
             </div>
           )}
         </div>
-        <div className="border-gray-300  fixed bottom-10 w-full">
+        <div className="border-gray-300 fixed bottom-10 w-full flex items-center">
           <input
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1 p-2 w-1/2 border rounded-lg"
+            className="flex-1 p-2 border rounded-lg"
           />
           <button
             onClick={sendMessage}
