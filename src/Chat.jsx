@@ -18,14 +18,8 @@ const ChatComponent = () => {
   const socket = useSocket(companyId);
 
   useEffect(() => {
-    socket.on("userStatus", ({ userId, online }) => {
-      setOnlineUsers((prevUsers) => {
-        const updatedUsers = prevUsers.filter((user) => user.userId !== userId);
-        if (online) {
-          updatedUsers.push({ userId, online });
-        }
-        return updatedUsers;
-      });
+    socket.on("userStatus", (onlineUsers) => {
+      setOnlineUsers(onlineUsers);
     });
 
     socket.emit("getConversations", companyId);
@@ -77,7 +71,7 @@ const ChatComponent = () => {
             )
           );
         });
-      }, 100);
+      }, 500);
       setMessage("");
       scrollToBottom();
     }
@@ -123,7 +117,7 @@ const ChatComponent = () => {
   }, [messages]);
 
   const isUserOnline = (studentId) => {
-    return onlineUsers.some((user) => user.userId === studentId);
+    return onlineUsers?.some((user) => user?.userId === studentId);
   };
 
   return (
@@ -159,16 +153,28 @@ const ChatComponent = () => {
             >
               {conversation?.participantDetails?.student?.Name}
               <br />
-              <span className="text-sm font-semibold text-gray-500">
-                {conversation?.lastMessage?.senderType === "Company"
-                  ? "You : "
-                  : `${conversation?.lastMessage?.student?.Name || ""}`}
-                {conversation?.lastMessage?.message || ""}
-                {conversation?.lastMessage?.lastMessageTime || ""}
+              <span className="text-sm font-semibold text-gray-500 flex justify-between pr-3">
+                <span>
+                  {conversation?.lastMessage?.senderType === "Student" ? (
+                    <i className="mr-3"></i>
+                  ) : (
+                    <i class="fa-solid fa-check mr-3"> </i>
+                  )}
+                  {conversation?.lastMessage?.message || ""}
+                  {isUserOnline(
+                    conversation?.participantDetails?.student?._id
+                  ) && <span className="ml-2 text-green-500">●</span>}
+                </span>
+                <span className="text-xs">
+                  {new Date(conversation?.lastMessage?.timestamp)
+                    .toLocaleTimeString("en-US", {
+                      hour: "numeric",
+                      minute: "numeric",
+                      hour12: true,
+                    })
+                    .replace(/(AM|PM)/g, (match) => match.toUpperCase()) || ""}
+                </span>
               </span>
-              {isUserOnline(conversation?.participantDetails?.student?._id) && (
-                <span className="ml-2 text-green-500">●</span>
-              )}
             </li>
           ))}
         </ul>
@@ -212,7 +218,15 @@ const ChatComponent = () => {
                         >
                           <div>{msg.message}</div>
                           <div className="text-sm text-gray-500">
-                            {new Date(msg.timestamp).toLocaleTimeString()}
+                            {new Date(msg?.timestamp)
+                              .toLocaleTimeString("en-US", {
+                                hour: "numeric",
+                                minute: "numeric",
+                                hour12: true,
+                              })
+                              .replace(/(AM|PM)/g, (match) =>
+                                match.toUpperCase()
+                              ) || ""}
                           </div>
                         </div>
                       ))}

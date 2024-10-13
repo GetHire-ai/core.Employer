@@ -37,9 +37,9 @@ const Sidebar = () => {
   const getBalance = async () => {
     try {
       let res = await GetApi(`api/companyroutes/wallet/balance`);
-      setBalance(res.data.data.balance);
+      setBalance(res?.data?.data?.balance);
     } catch (error) {
-      console.log(error);
+      console.log(error.response);
     }
   };
 
