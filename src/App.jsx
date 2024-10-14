@@ -1,5 +1,3 @@
-// now i have to change in ThirtyTwo
-
 import React, { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -44,7 +42,7 @@ import Community from "./pages/Community/index";
 import JobCreateManual from "pages/Jobs/JobsCreate/JobCreateManual";
 import JobEdit from "pages/Jobs/JobsCreate/EditAJobWithManual";
 import JobCreateManualId from "pages/Jobs/JobsCreate/JobCreateManualId";
-import Chat from "./Chat";
+import Chat from "pages/Chat";
 import FirstPage from "pages/Auth/FirstPage";
 import Forget from "pages/Auth/Forget";
 import SearchCandidate from "pages/Jobs/SearchCandidate/SearchCandidate";
@@ -111,7 +109,7 @@ const ProjectRoutes = () => {
               visible={true}
               height="96"
               width="96"
-              color="blue" 
+              color="blue"
               strokeWidth="5"
               animationDuration="0.75"
               ariaLabel="rotating-lines-loading"

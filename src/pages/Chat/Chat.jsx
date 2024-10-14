@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { Hourglass } from "react-loader-spinner";
 import useSocket from "./useSocket";
 
-const ChatComponent = () => {
+const Chat = () => {
   const companyId = localStorage.getItem("companyid");
   const messagesEndRef = useRef(null);
   const [message, setMessage] = useState("");
@@ -257,4 +257,4 @@ const ChatComponent = () => {
   );
 };
 
-export default ChatComponent;
+export default Chat;
