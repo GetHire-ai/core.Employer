@@ -196,7 +196,8 @@ const JobCreateManual = () => {
         return;
       }
     }
-    setOpenPayModal(true);
+    // setOpenPayModal(true);
+    CreateNewJob();
   };
 
   const handleQuestionChange = (topic, index, newValue) => {
@@ -321,7 +322,7 @@ const JobCreateManual = () => {
     </div>
   );
 
-  const CreateNewJob = async (navigatePath = "/jobs") => {
+  const CreateNewJob = async () => {
     setOpenPayModal(false);
     try {
       setLoading(true);
