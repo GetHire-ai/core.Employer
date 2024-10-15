@@ -42,7 +42,7 @@ import Community from "./pages/Community/index";
 import JobCreateManual from "pages/Jobs/JobsCreate/JobCreateManual";
 import JobEdit from "pages/Jobs/JobsCreate/EditAJobWithManual";
 import JobCreateManualId from "pages/Jobs/JobsCreate/JobCreateManualId";
-import Chat from "pages/Chat";
+import Chat from "./pages/Chat";
 import FirstPage from "pages/Auth/FirstPage";
 import Forget from "pages/Auth/Forget";
 import SearchCandidate from "pages/Jobs/SearchCandidate/SearchCandidate";

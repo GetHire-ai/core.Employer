@@ -1,8 +1,8 @@
 import React from "react";
 import Chat from "./Chat";
 
-const Index = () => {
+const index = () => {
   return <Chat />;
 };
 
-export default Index;
+export default index;

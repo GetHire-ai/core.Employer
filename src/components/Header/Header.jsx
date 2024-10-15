@@ -70,7 +70,7 @@ const Header = () => {
       className=" bg-white flex-col md:flex-row flex gap-5 justify-between p-[6px] rounded-[12px] w-full"
       ref={dropdownRef}
     >
-      <div className="text-center text-white font-semibold text-xl rounded-lg w-full flex justify-center items-center bg-[#0ba1dc]  bg-gradient-to-r from-blue-500 to-teal-400 shadow-lg whitespace-nowrap">
+      <div className="px-2 text-center text-white font-semibold text-xl rounded-lg w-full flex justify-center items-center bg-[#0ba1dc]  bg-gradient-to-r from-blue-500 to-teal-400 shadow-lg whitespace-nowrap">
         Get candidates sourced, shortlisted, and interviewed to meet your
         specific hiring needs — all within a single day!
       </div>
