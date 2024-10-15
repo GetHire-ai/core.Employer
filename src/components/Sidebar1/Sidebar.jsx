@@ -93,7 +93,7 @@ const Sidebar = () => {
           scrollbarWidth: "none",
           "-ms-overflow-style": "none",
           width: isCollapsed ? "80px" : "220px",
-          transition: "width 0.5s ease, opacity 0.3s ease",
+          transition: "width 0.3s ease, opacity 0.3s ease",
           position: isCollapsed ? "fixed" : "fixed",
           minHeight: isCollapsed ? "100vh" : "100vh",
           top: 0,
