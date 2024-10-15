@@ -1,5 +1,3 @@
-// now i have to change in ThirtyTwo
-
 import React, { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -41,7 +39,7 @@ import SettingsCareer from "pages/SettingsPage/SettingsCareer";
 import Login from "pages/Auth/Login";
 import Signup from "pages/Auth/Signup";
 import Community from "./pages/Community/index";
-import JobCreateManual from "pages/Jobs/JobsCreate/JobCreateManual";
+import JobCreateManual from "pages/Jobs/JobsCreate/JobCreate";
 import JobEdit from "pages/Jobs/JobsCreate/EditAJobWithManual";
 import JobCreateManualId from "pages/Jobs/JobsCreate/JobCreateManualId";
 import Chat from "./pages/Chat";

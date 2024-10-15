@@ -6,10 +6,7 @@ import { FiAlignRight } from "react-icons/fi";
 import ChatModal from "components/ChatBox/ChatModal";
 import { GetApi } from "Api/Api_Calling";
 import logo from "../../assets/images/logo.svg";
-
-// importing database logo
 import { BsDatabase } from "react-icons/bs";
-import { FaArrowRight } from "react-icons/fa";
 
 const Sidebar = () => {
   const path = useLocation();
@@ -91,21 +88,14 @@ const Sidebar = () => {
   return (
     <>
       <div
-        style={{
-          minWidth: "80px",
-          backgroundColor: "white",
-          display: isCollapsed ? "none" : "",
-        }}
-      ></div>
-      <div
         className="text-gray-900 md:m-0 p-4 flex justify-start md:flex-col items-center md:items-start md:gap-2 overflow-x-auto w-full bg-white"
         style={{
           scrollbarWidth: "none",
           "-ms-overflow-style": "none",
           width: isCollapsed ? "80px" : "220px",
           transition: "width 0.5s ease, opacity 0.3s ease",
-          position: isCollapsed ? "" : "fixed",
-          minHeight: isCollapsed ? "" : "100vh",
+          position: isCollapsed ? "fixed" : "fixed",
+          minHeight: isCollapsed ? "100vh" : "100vh",
           top: 0,
           left: 0,
           zIndex: 1000,
