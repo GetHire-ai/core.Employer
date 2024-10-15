@@ -345,7 +345,7 @@ const JobCreateManual = () => {
       setLoading(true);
       const responce = await PostApi("api/CompanyRoutes/CreateJob", JobData);
       toast.success(responce?.data?.message, { autoClose: 1000 });
-      navigate('/jobs');
+      navigate("/jobs");
     } catch (error) {
       toast.error(error?.response?.data?.message, { autoClose: 1000 });
       console.log(error);

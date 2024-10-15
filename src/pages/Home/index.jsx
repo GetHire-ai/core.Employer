@@ -202,7 +202,7 @@ const DashboardThirteenPage = () => {
         setInterviewdata={setInterviewdata}
         Scheduleinterviewapi={Scheduleinterviewapi}
       />
-      <div className="bg-gray-100 font-[Poppins] w-full">
+      <div className="bg-gray-100 font-[Poppins] w-full px-8">
         <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
           <Text className="font-semibold text-[24px] md:text-[22px] text-gray-800 pl-[10px]">
             Overview
