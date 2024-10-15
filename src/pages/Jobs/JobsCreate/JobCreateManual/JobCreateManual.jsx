@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Button, Img, Text } from "components";
+import React, { useRef, useState } from "react";
+import { Button } from "components";
 import { skills, positions } from "../Suggestion";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Select,
   FormLabel,
@@ -89,12 +89,9 @@ const options = [
 
 const JobCreateManual = () => {
   const listRef = useRef(null);
-  const skillListRef = useRef(null);
   const navigate = useNavigate();
-  const [selectedOptions, setSelectedOptions] = useState([]);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
   const [openPayModal, setOpenPayModal] = useState(false);
-  const [allowDirectContact, setAllowDirectContact] = useState(false);
   const [JobData, setJobData] = useState({
     type: "job",
     internshipType: "",
@@ -536,7 +533,7 @@ const JobCreateManual = () => {
   };
   const companydataString = localStorage.getItem("companydata");
   const companydata = JSON.parse(companydataString);
-  
+
   return (
     <div className="container mx-auto">
       {loading && (
@@ -1945,8 +1942,6 @@ const JobCreateManual = () => {
                                 const {
                                   target: { value },
                                 } = event;
-
-                                // If "Select All" is selected, select all options
                                 if (value.includes("Select All")) {
                                   setVideoInterview((prev) => ({
                                     ...prev,
@@ -1964,7 +1959,6 @@ const JobCreateManual = () => {
                                     },
                                   }));
                                 } else {
-                                  // Handle other selections
                                   setVideoInterview((prev) => ({
                                     ...prev,
                                     topic: Array.isArray(value)
@@ -1998,46 +1992,115 @@ const JobCreateManual = () => {
                           <div className="flex justify-end items-center">
                             <button
                               className="bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300"
-                              onClick={async () => {
+                              onClick={() => {
                                 setLoading(true);
-                                if (!JobData || JobData.positionName === "") {
-                                  toast.error("Job title is required", {
-                                    autoClose: 1000,
-                                  });
-                                  return;
-                                }
-                                try {
-                                  const response = await fetch(
-                                    "https://shining-needed-bug.ngrok-free.app/generate-questions",
-                                    {
-                                      method: "POST",
-                                      headers: {
-                                        "Content-Type": "application/json",
-                                        Accept: "application/json",
-                                      },
-                                      body: JSON.stringify({
-                                        jobTitle: JobData.positionName,
-                                        experience: videoInterview?.level,
-                                        categories: videoInterview?.topic,
-                                      }),
-                                    }
-                                  );
-                                  const responseData = await response.json();
-                                  const formattedQuestions = Object.keys(
-                                    responseData
-                                  ).map((key) => ({
-                                    topic: key,
-                                    questions: responseData[key],
-                                  }));
-                                  setJobData((prev) => ({
-                                    ...prev,
-                                    videoQuestions: formattedQuestions,
-                                  }));
-                                } catch (error) {
-                                  // Handle error
-                                } finally {
-                                  setLoading(false);
-                                }
+
+                                // Commented out the API call and added dummy data
+                                /*
+            try {
+              const response = await fetch(
+                "https://shining-needed-bug.ngrok-free.app/generate-questions",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                  },
+                  body: JSON.stringify({
+                    jobTitle: JobData.positionName,
+                    experience: videoInterview?.level,
+                    categories: videoInterview?.topic,
+                  }),
+                }
+              );
+              const responseData = await response.json();
+              const formattedQuestions = Object.keys(
+                responseData
+              ).map((key) => ({
+                topic: key,
+                questions: responseData[key],
+              }));
+              setJobData((prev) => ({
+                ...prev,
+                videoQuestions: formattedQuestions,
+              }));
+            } catch (error) {
+              // Handle error
+            } finally {
+              setLoading(false);
+            }
+            */
+
+                                // Dummy question generation for "Business Development"
+                                const dummyQuestions = [
+                                  {
+                                    topic: "Technical",
+                                    questions: [
+                                      "Can you explain the difference between client-side and server-side rendering in web development?",
+                                      "How do you optimize database queries to improve performance?",
+                                      "Describe a time when you debugged a complex code issue. How did you resolve it?",
+                                      "What are the key differences between synchronous and asynchronous programming?",
+                                      "How do you ensure the security of an application while developing?",
+                                    ],
+                                  },
+                                  {
+                                    topic: "Behavioral",
+                                    questions: [
+                                      "Tell me about a time when you had to manage a conflict within a team. How did you handle it?",
+                                      "Describe a situation where you had to adapt to a major change at work.",
+                                      "How do you prioritize tasks when facing tight deadlines?",
+                                      "Give an example of how you handled constructive criticism in a professional setting.",
+                                      "Tell me about a time when you went above and beyond your normal responsibilities.",
+                                    ],
+                                  },
+                                  {
+                                    topic: "Skill Based",
+                                    questions: [
+                                      "Describe a skill you’ve developed that is directly relevant to this job.",
+                                      "What tools or software are you proficient in using?",
+                                      "How have you applied problem-solving skills to address complex challenges?",
+                                      "Tell me about a time when you had to learn a new skill quickly.",
+                                      "How do you ensure continuous improvement of your professional skills?",
+                                    ],
+                                  },
+                                  {
+                                    topic: "Competency-Based",
+                                    questions: [
+                                      "Tell me about a time when you led a team to accomplish a challenging goal.",
+                                      "Describe how you have successfully managed multiple projects simultaneously.",
+                                      "Can you give an example of a time when you resolved a difficult problem at work?",
+                                      "How have you demonstrated leadership in a difficult situation?",
+                                      "Describe a situation where your decision-making skills were put to the test.",
+                                    ],
+                                  },
+                                  {
+                                    topic: "Fact-Based",
+                                    questions: [
+                                      "What is your biggest achievement in your current or previous role?",
+                                      "How many years of experience do you have in this industry?",
+                                      "What were your key responsibilities in your last job?",
+                                      "Can you describe the results of a project you completed recently?",
+                                      "What tools or software are you most familiar with in your current role?",
+                                    ],
+                                  },
+                                  {
+                                    topic: "Situational",
+                                    questions: [
+                                      "What would you do if a client approached you with a complaint about a product?",
+                                      "How would you handle a situation where you had to work with a difficult team member?",
+                                      "Describe a time when you had to meet an urgent deadline with limited resources.",
+                                      "How would you approach a project with an unclear scope and tight deadlines?",
+                                      "What would you do if you were given multiple high-priority tasks with the same deadline?",
+                                    ],
+                                  },
+                                ];
+
+                                setJobData((prev) => ({
+                                  ...prev,
+                                  videoQuestions: dummyQuestions,
+                                }));
+
+                                setLoading(false);
                               }}
                             >
                               Generate
