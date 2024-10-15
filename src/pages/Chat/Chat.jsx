@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import { format } from "date-fns";
 import { Hourglass } from "react-loader-spinner";
-import useSocket from "./useSocket";
+import useSocket from "../../useSocket";
 
 const ChatComponent = () => {
   const companyId = localStorage.getItem("companyid");
