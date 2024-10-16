@@ -1,7 +1,5 @@
 import React, { useRef, useState } from "react";
 import { Button } from "components";
-import { skills, positions } from "../Suggestion";
-import { Link, useNavigate } from "react-router-dom";
 import {
   Select,
   FormLabel,
@@ -16,6 +14,21 @@ import {
   FormControl,
   FormHelperText,
 } from "@mui/material";
+import {
+  skills,
+  positions,
+  dummyQuestions,
+  noticePeriodOptions,
+  experienceOptionsYears,
+  educationOptions,
+  graduateOptions,
+  postGraduateOptions,
+  salaryOptions,
+  englishLevelOptions,
+  options,
+} from "../Suggestion";
+import { Link, useNavigate } from "react-router-dom";
+
 import DeleteIcon from "@mui/icons-material/Delete";
 import styled from "@emotion/styled";
 import axios from "axios";
@@ -23,106 +36,6 @@ import { PostApi } from "Api/Api_Calling";
 import { toast } from "react-toastify";
 import PaymentModal from "components/PaymentModals/PaymentModal";
 import JobDetails from "./JobDetails";
-
-const dummyQuestions = [
-  {
-    topic: "Technical",
-    questions: [
-      "Can you explain the difference between client-side and server-side rendering in web development?",
-      "How do you optimize database queries to improve performance?",
-      "Describe a time when you debugged a complex code issue. How did you resolve it?",
-      "What are the key differences between synchronous and asynchronous programming?",
-      "How do you ensure the security of an application while developing?",
-    ],
-  },
-  {
-    topic: "Behavioral",
-    questions: [
-      "Tell me about a time when you had to manage a conflict within a team. How did you handle it?",
-      "Describe a situation where you had to adapt to a major change at work.",
-      "How do you prioritize tasks when facing tight deadlines?",
-      "Give an example of how you handled constructive criticism in a professional setting.",
-      "Tell me about a time when you went above and beyond your normal responsibilities.",
-    ],
-  },
-  {
-    topic: "Skill Based",
-    questions: [
-      "Describe a skill you’ve developed that is directly relevant to this job.",
-      "What tools or software are you proficient in using?",
-      "How have you applied problem-solving skills to address complex challenges?",
-      "Tell me about a time when you had to learn a new skill quickly.",
-      "How do you ensure continuous improvement of your professional skills?",
-    ],
-  },
-  {
-    topic: "Competency-Based",
-    questions: [
-      "Tell me about a time when you led a team to accomplish a challenging goal.",
-      "Describe how you have successfully managed multiple projects simultaneously.",
-      "Can you give an example of a time when you resolved a difficult problem at work?",
-      "How have you demonstrated leadership in a difficult situation?",
-      "Describe a situation where your decision-making skills were put to the test.",
-    ],
-  },
-  {
-    topic: "Fact-Based",
-    questions: [
-      "What is your biggest achievement in your current or previous role?",
-      "How many years of experience do you have in this industry?",
-      "What were your key responsibilities in your last job?",
-      "Can you describe the results of a project you completed recently?",
-      "What tools or software are you most familiar with in your current role?",
-    ],
-  },
-  {
-    topic: "Situational",
-    questions: [
-      "What would you do if a client approached you with a complaint about a product?",
-      "How would you handle a situation where you had to work with a difficult team member?",
-      "Describe a time when you had to meet an urgent deadline with limited resources.",
-      "How would you approach a project with an unclear scope and tight deadlines?",
-      "What would you do if you were given multiple high-priority tasks with the same deadline?",
-    ],
-  },
-];
-
-const noticePeriodOptions = ["15 Days", "30 Days", "2 Months", "3 Months"];
-
-const experienceOptionsYears = [
-  { label: "0 years", value: 0 },
-  { label: "1 year", value: 1 },
-  { label: "2 years", value: 2 },
-  { label: "3 years", value: 3 },
-  { label: "4 years", value: 4 },
-  { label: "5 years", value: 5 },
-];
-
-const educationOptions = [
-  { label: "10", value: "10th Pass" },
-  { label: "12", value: "12th Pass" },
-  { label: "diploma", value: "Diploma" },
-  { label: "iti", value: "ITI" },
-  { label: "UnderGraduate", value: "Graduate" },
-  { label: "PostGraduate", value: "Post Graduate" },
-];
-
-const graduateOptions = ["BCA", "BBA", "B.Sc", "B.Com", "B.Tech"];
-const postGraduateOptions = ["MCA", "MBA", "M.Sc", "M.Com", "M.Tech"];
-
-const salaryOptions = [
-  { label: "1 lac", value: 100000 },
-  { label: "2 lac", value: 200000 },
-  { label: "3 lac", value: 300000 },
-  { label: "4 lac", value: 400000 },
-  { label: "5 lac", value: 500000 },
-];
-
-const englishLevelOptions = [
-  { label: "No English", value: "noEnglish" },
-  { label: "Basic English", value: "basicEnglish" },
-  { label: "Good English", value: "goodEnglish" },
-];
 
 const CustomSelect = styled(Select)(({ theme }) => ({
   "& .MuiSelect-select": {
@@ -139,16 +52,6 @@ const CustomSelect = styled(Select)(({ theme }) => ({
     color: "#5956e9",
   },
 }));
-
-const options = [
-  "Select All",
-  "Technical",
-  "Behavioral",
-  "Skill Based",
-  "Competency-Based",
-  "Fact-Based",
-  "Situational",
-];
 
 const JobCreateManual = () => {
   const listRef = useRef(null);
