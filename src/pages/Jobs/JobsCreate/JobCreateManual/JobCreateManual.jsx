@@ -2244,7 +2244,7 @@ const JobCreateManual = () => {
         </div>
       </div>
       <PaymentModal
-        open={openPayModal}
+        open={true}
         handleClose={() => setOpenPayModal(false)}
         jobCreate={CreateNewJob}
       />

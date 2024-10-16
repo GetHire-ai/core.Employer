@@ -16,7 +16,7 @@ import {
 import { GetApi, PostApi } from "Api/Api_Calling";
 import { useNavigate } from "react-router-dom";
 
-const OnboardingProcess = () => {
+const OnboardingDetail = () => {
   let navigate = useNavigate();
   const [company, setCompany] = useState({});
   const [loading, setLoading] = useState(false);
@@ -279,4 +279,4 @@ const OnboardingProcess = () => {
   );
 };
 
-export default OnboardingProcess;
+export default OnboardingDetail;

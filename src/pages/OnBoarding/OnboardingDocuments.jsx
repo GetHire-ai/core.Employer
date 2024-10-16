@@ -1,6 +1,6 @@
 import React from "react";
 import { Drawer, IconButton } from "@mui/material";
-import { Close as CloseIcon } from "@mui/icons-material";
+import { Close } from "@mui/icons-material";
 
 const OnboardingDocuments = ({ isOpen, toggleDrawer, content }) => {
   return (
@@ -10,7 +10,7 @@ const OnboardingDocuments = ({ isOpen, toggleDrawer, content }) => {
           onClick={toggleDrawer(false)}
           style={{ marginBottom: "16px" }}
         >
-          <CloseIcon />
+          <Close />
         </IconButton>
         <div className="pt-36">{content.StudentId.Name}</div>
       </div>

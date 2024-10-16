@@ -53,7 +53,7 @@ import ImportedApplications from "components/ImportedData/ImportedApplications";
 import EditProfile from "pages/Thirtytwo/EditProfile";
 import Notification from "pages/Notification/Notification";
 import { JobsSettings } from "pages/Jobs/JobsLinks";
-import OnboardingProcess from "pages/OnboardingProcess";
+import OnboardingProcess from "pages/OnboardingProcess/OnboardingProcess";
 const Home = React.lazy(() => import("pages/Home"));
 const DashboardOne = React.lazy(() => import("pages/DashboardOne"));
 const DashboardTwo = React.lazy(() => import("pages/ApplicationManager"));

@@ -1,0 +1,176 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Arial", sans-serif;
+  }
+
+  body {
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  /* White Box Container */
+  .popup-box {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    width: 90%;
+    margin: 20px;
+  }
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+  }
+
+  .left-section,
+  .right-section {
+    width: 48%;
+    padding: 30px;
+  }
+
+  .left-section {
+    background-color: #0056b3;
+    color: white;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .right-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .section-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .next-heading {
+    font-size: 16px;
+    /* font-weight: bold; */
+    margin-bottom: 20px;
+    /* color: rgb(240, 189, 61); */
+    color: gold;
+  }
+
+  /* Primary Button Styling */
+  .primary-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .primary-button:hover {
+    background-color: #0056b3;
+  }
+
+  .row {
+    /* display: flex; Make it a flex container */
+    align-items: center; /* Center vertically */
+    border: 1px solid #f3f0f0; /* Add a border around the entire row */
+    padding: 5px 10px; /* Add padding for spacing */
+    border-radius: 5px; /* Add rounded corners */
+    transition: border-color 0.3s ease; /* Transition for border color */
+  }
+
+  .row:hover {
+    border-color: #007bff;
+  }
+
+  .row1 {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  .row2 {
+    font-size: 12px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+  }
+
+  /* Card-like Action Links */
+  .additional-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .action-card {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    color: #0056b3;
+    border-radius: 8px;
+    padding: 10px;
+    text-decoration: none;
+    font-size: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+
+  .action-card i {
+    margin-right: 10px;
+    font-size: 18px;
+  }
+
+  .action-card:hover {
+    transform: translateY(-5px);
+    background-color: #e6f2ff;
+  }
+
+  /* Container for Features with Background Color */
+  .features-container {
+    background-color: #024894; /* Background color for the feature container */
+    border-radius: 8px; /* Optional: Add border radius for rounded corners */
+    padding: 15px; /* Adjust padding as needed */
+  }
+
+  /* Feature List with Checkmarks */
+  .feature-list {
+    list-style: none;
+    padding-left: 20px;
+  }
+
+  .feature-list li {
+    font-size: 16px;
+    margin-bottom: 15px;
+    padding: 10px 30px; /* Adjust padding for visibility */
+    position: relative;
+    display: flex;
+    align-items: center;
+    color: white; /* Text color for better readability */
+  }
+
+  /* Adding checkmark before each list item */
+  .feature-list li::before {
+    content: "\f00c"; /* Unicode for FontAwesome checkmark */
+    font-family: "FontAwesome";
+    color: white; /* White color for the checkmark */
+    position: absolute;
+    left: 1px; /* Adjust positioning as needed */
+    font-size: 18px; /* Adjust the size as needed */
+  }
