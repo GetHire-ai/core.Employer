@@ -12,6 +12,7 @@ import {
 import axios from "axios";
 
 const OnboardingSteps = ({ data, step, updateOnboarding }) => {
+
   const [formData, setFormData] = useState({
     fullName: data?.fullName,
     contactInformation: "",
@@ -127,6 +128,7 @@ const OnboardingSteps = ({ data, step, updateOnboarding }) => {
 
   // Handle file input changes
   const handleFileChange = (event, fieldName) => {
+    // console.log(fieldName,event.target.files[0]);
     setFormData((prevData) => ({
       ...prevData,
       documentFiles: {
@@ -158,7 +160,7 @@ const OnboardingSteps = ({ data, step, updateOnboarding }) => {
         formDataToSend.append(key, formData.documentFiles[key]);
       }
     });
-    updateOnboarding(formData);
+    // updateOnboarding(formData);
   };
 
   const renderForm = () => {

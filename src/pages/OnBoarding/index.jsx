@@ -337,7 +337,14 @@ const TwentysixPage = () => {
                     key={index}
                     className="hover:bg-gray-200 duration-500 ease-in-out "
                     onClick={() => {
-                      handleItemClick(interviewInProcess);
+                      navigate("/onboarding-process", {
+                        state: {
+                          jobId: interviewInProcess?.JobId?._id,
+                          studentId: interviewInProcess?.StudentId._id,
+                          companyId: interviewInProcess?.CompanyId,
+                        },
+                      });
+                      // handleItemClick(interviewInProcess);
                       // if (interviewInProcess.onboardingDocumentsAvailable) {
                       // handleItemClick(interviewInProcess);
                       // }

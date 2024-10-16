@@ -28,7 +28,7 @@ const ChatModal = ({ open, handleClose }) => {
           setMessages(response.data.data);
         })
         .catch((error) => {
-          console.error("Error fetching conversation or messages:", error);
+          // console.error("Error fetching conversation or messages:", error);
         });
     }
   }, []);

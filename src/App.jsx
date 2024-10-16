@@ -60,7 +60,7 @@ const DashboardTwo = React.lazy(() => import("pages/ApplicationManager"));
 const Dashboard = React.lazy(() => import("pages/Dashboard"));
 const Twentytwo = React.lazy(() => import("pages/Twentytwo"));
 const Twentythree = React.lazy(() => import("pages/Twentythree"));
-const Twentysix = React.lazy(() => import("pages/Twentysix"));
+const OnBoarding = React.lazy(() => import("pages/OnBoarding"));
 const Thirtytwo = React.lazy(() => import("pages/Thirtytwo"));
 const Thirtythree = React.lazy(() => import("pages/Thirtythree"));
 const Thirtyfour = React.lazy(() => import("pages/Thirtyfour"));
@@ -203,7 +203,7 @@ const ProjectRoutes = () => {
                   path="/interviews-application"
                   element={<Twentythree />}
                 />
-                <Route path="/onboarding" element={<Twentysix />} />
+                <Route path="/onboarding" element={<OnBoarding />} />
                 <Route
                   path="/onboarding-process"
                   element={<OnboardingProcess />}

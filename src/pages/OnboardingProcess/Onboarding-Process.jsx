@@ -26,7 +26,7 @@ const OnboardingProcess = () => {
     selectedDocuments: [],
     orientationFiles: [],
     orientationType: "pdf",
-    address: "", 
+    address: "",
   });
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const OnboardingProcess = () => {
           selectedDocuments: onboardingProcess.selectedDocuments || [],
           orientationType: onboardingProcess.orientationType || "pdf",
           orientationFiles: [],
-          address: onboardingProcess.address || "", 
+          address: onboardingProcess.address || "",
         });
       } catch (error) {
         console.log(error);
