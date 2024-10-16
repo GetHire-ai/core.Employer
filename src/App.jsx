@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import "react-toastify/dist/ReactToastify.css";
-import { RotatingLines } from "react-loader-spinner";
+import LinearProgress from "@mui/material/LinearProgress";
 import {
   BrowserRouter as Router,
   Routes,
@@ -105,17 +105,7 @@ const ProjectRoutes = () => {
       <React.Suspense
         fallback={
           <div className=" origin-center flex justify-center items-center h-screen w-screen">
-            <RotatingLines
-              visible={true}
-              height="96"
-              width="96"
-              color="blue"
-              strokeWidth="5"
-              animationDuration="0.75"
-              ariaLabel="rotating-lines-loading"
-              wrapperStyle={{}}
-              wrapperClass=""
-            />
+            <LinearProgress />
           </div>
         }
       >

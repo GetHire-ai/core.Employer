@@ -8,6 +8,7 @@ import { GetApi, PutApi } from "Api/Api_Calling";
 import { useNavigate } from "react-router-dom";
 // for importing modal
 import Modal from "react-modal";
+import { toast } from "react-toastify";
 Modal.setAppElement("#root");
 
 const DashboardThirteenPage = () => {
@@ -89,15 +90,15 @@ const DashboardThirteenPage = () => {
 
   const GetAllShortlistedStudents = async () => {
     try {
+      setLoading(true);
       const response = await GetApi(
         "api/CompanyRoutes/GetAllShortlistedStudents"
       );
       setAllShortlistedStudents(response?.data?.data);
-      // console.log(response?.data?.data[0].skillsTestResult.scorePercentage)
-      // console.log(response?.data?.data[0].aiTestResult.score)
-      // console.log(response?.data?.data[0].avaregeScore)
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -182,12 +183,13 @@ const DashboardThirteenPage = () => {
         location: Interviewdetail.location,
         notes: Interviewdetail.notes,
       };
-      const response = await PutApi(
-        `api/CompanyRoutes/ScheduleInterview/${selectedid}`,
-        { interviewSchedule: interviewData }
-      );
+      await PutApi(`api/CompanyRoutes/ScheduleInterview/${selectedid}`, {
+        interviewSchedule: interviewData,
+      });
+      toast.success("Interview Scheduled Successfull !", { autoClose: 1000 });
       setInterviewModal(false);
     } catch (error) {
+      toast.error("Interview Scheduled Failed !", { autoClose: 1000 });
       setLoading(false);
       console.error(error.response);
     }

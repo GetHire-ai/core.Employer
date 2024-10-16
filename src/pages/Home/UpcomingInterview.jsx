@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ShortStudentCard from "pages/Jobs/JobsApplication/ShortStudentCard";
 import LinearProgress from "@mui/material/LinearProgress";
 
