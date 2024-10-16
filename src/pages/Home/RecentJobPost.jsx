@@ -2,7 +2,7 @@ import { GetApi } from "Api/Api_Calling";
 import React, { useEffect, useState } from "react";
 import JobSidebar from "pages/Jobs/JobsApplication/JobSidebar";
 import { useNavigate } from "react-router-dom";
-import { MutatingDots } from 'react-loader-spinner'
+import LinearProgress from "@mui/material/LinearProgress";
 
 const RecentJobPost = () => {
   const navigate = useNavigate();
@@ -27,8 +27,8 @@ const RecentJobPost = () => {
     }
   };
 
-  function handleChange(){
-    navigate('/jobs');
+  function handleChange() {
+    navigate("/jobs");
   }
 
   useEffect(() => {
@@ -36,32 +36,22 @@ const RecentJobPost = () => {
   }, []);
 
   return (
-    <>  
-      {loading ? (
-        <div className="  flex justify-center origin-center"><MutatingDots
-          visible={true}
-          height="80"
-          width="80"
-          color="#4fa94d"
-          radius="9"
-          ariaLabel="three-dots-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
-          /></div>
-      ) : (
-        <div>
-          <div className="flex justify-between items-center mb-[16px]">
-            <h1 className="font-[500] text-[#333333] font-[Poppins] text-[20px]">
-              Recent Job Posts
-            </h1>
-            <button
-                className="bg-blue-500 hover:bg-blue-700 hover:shadow-slate-600 text-white py-[12px] px-[28px] font-medium text-[16px] font-[Montserrat] rounded-full transition duration-300 shadow-lg transform hover:scale-105 flex items-center justify-center"
-                onClick={handleChange}
-              >
-                See All
-            </button>
-
-          </div>
+    <>
+      <div>
+        <div className="flex justify-between items-center mb-[16px]">
+          <h1 className="font-[500] text-[#333333] font-[Poppins] text-[20px]">
+            Recent Job Posts
+          </h1>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 hover:shadow-slate-600 text-white py-[12px] px-[28px] font-medium text-[16px] font-[Montserrat] rounded-full transition duration-300 shadow-lg transform hover:scale-105 flex items-center justify-center"
+            onClick={handleChange}
+          >
+            See All
+          </button>
+        </div>
+        {loading ? (
+          <LinearProgress />
+        ) : (
           <div className="sm:overflow-x-hidden overflow-x-auto">
             <table className="w-full">
               <thead className="bg-[#EDF4FB] rounded-[4px] pt-[12px] px-[12px] pb-[8px]">
@@ -116,13 +106,14 @@ const RecentJobPost = () => {
               </tbody>
             </table>
           </div>
-          <JobSidebar
-            side1={side1}
-            openSideBar={openSideBar}
-            selectedApplication={AllJobs[openIndex]}
-          />
-        </div>
-      )}
+        )}
+
+        <JobSidebar
+          side1={side1}
+          openSideBar={openSideBar}
+          selectedApplication={AllJobs[openIndex]}
+        />
+      </div>
     </>
   );
 };

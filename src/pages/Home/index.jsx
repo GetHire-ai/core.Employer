@@ -459,6 +459,7 @@ const DashboardThirteenPage = () => {
           <div className="bg-white rounded-[10px] py-[14px] px-[13px] min-h-[70vh]">
             <UpcomingInterview
               AllShortlistedStudents={AllShortlistedStudents}
+              loading={loading}
               openModal={(id) => {
                 setInterviewModal(true);
                 setselectedid(id);
