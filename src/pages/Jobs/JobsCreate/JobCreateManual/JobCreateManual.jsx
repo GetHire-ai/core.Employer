@@ -57,7 +57,7 @@ const JobCreateManual = () => {
   const listRef = useRef(null);
   const navigate = useNavigate();
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
-  const [openPayModal, setOpenPayModal] = useState(false);
+  const [openPayModal, setOpenPayModal] = useState(true);
   const [JobData, setJobData] = useState({
     type: "job",
     internshipType: "",
@@ -2244,7 +2244,7 @@ const JobCreateManual = () => {
         </div>
       </div>
       <PaymentModal
-        open={true}
+        open={openPayModal}
         handleClose={() => setOpenPayModal(false)}
         jobCreate={CreateNewJob}
       />

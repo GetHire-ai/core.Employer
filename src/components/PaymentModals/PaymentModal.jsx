@@ -1,10 +1,10 @@
 import React from "react";
-import "./styles.css"; 
+import "./styles.css";
 
-const PaymentModal = () => {
+const PaymentModal = ({ open, handleClose, jobCreate }) => {
   return (
     <div className="popup-box fixed">
-      <div className="container">
+      <div className="flex justify-between items-stretch">
         {/* Left Side: Features Section */}
         <div className="left-section">
           <h2 className="section-title">AI-based Onboarding Features</h2>
