@@ -44,8 +44,7 @@ const Index = () => {
   const getOnboarding = async () => {
     try {
       setLoading(true);
-      const url = `api/onboardroutes/${jobId}/${studentId}/${companyId}`;
-      const res = await GetApi(url);
+      const res = await GetApi(`api/onboardroutes/${jobId}/${studentId}`);
       setOnboardingData(res?.data?.data || {});
       // console.log(res.data.data);
     } catch (err) {
