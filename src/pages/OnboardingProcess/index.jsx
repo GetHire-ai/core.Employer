@@ -31,7 +31,7 @@ const Index = () => {
   const [onboardingData, setOnboardingData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [step, setStep] = useState("");
+  const [step, setStep] = useState("Personal Information");
 
   useEffect(() => {
     if (!companyId || !jobId || !studentId) {

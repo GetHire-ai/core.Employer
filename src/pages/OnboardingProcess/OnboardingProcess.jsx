@@ -99,7 +99,6 @@ const OnboardingProcess = () => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      // Automatically set acceptanceMethod to match releaseMethod before submission
       const updatedFormData = {
         ...formData,
         acceptanceMethod: formData.releaseMethod,
