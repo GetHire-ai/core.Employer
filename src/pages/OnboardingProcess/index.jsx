@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { GetApi, PostApi } from "Api/Api_Calling";
+import { GetApi, PutApiFormData } from "Api/Api_Calling";
 import OnboardingSteps from "./OnboardingSteps";
-import { List, ListItem, ListItemText, Box, Paper } from "@mui/material";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  Box,
+  Paper,
+  LinearProgress,
+} from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -36,9 +43,11 @@ const Index = () => {
 
   const getOnboarding = async () => {
     try {
-      const url = `api/CompanyRoutes/get-onboarding/${jobId}/${studentId}/${companyId}`;
+      setLoading(true);
+      const url = `api/onboardroutes/${jobId}/${studentId}/${companyId}`;
       const res = await GetApi(url);
       setOnboardingData(res?.data?.data || {});
+      // console.log(res.data.data);
     } catch (err) {
       setError("Failed to fetch data");
       console.error(err.response);
@@ -49,8 +58,9 @@ const Index = () => {
 
   const updateOnboarding = async (data) => {
     try {
-      const url = `api/CompanyRoutes/update-onboarding/${onboardingData._id}`;
-      await PostApi(url, data);
+      const url = `api/onboardroutes/update/${onboardingData._id}`;
+      await PutApiFormData(url, data);
+      getOnboarding();
       toast.success("Onboarding Updated", { autoClose: 1000 });
     } catch (err) {
       toast.error("Onboarding Updating Failed", { autoClose: 1000 });
@@ -72,6 +82,7 @@ const Index = () => {
         fontFamily: "poppins",
       }}
     >
+      <LinearProgress />
       <Paper elevation={3} sx={{ width: 290, padding: 2, marginRight: 2 }}>
         <List>
           {steps.map((stepName, index) => (

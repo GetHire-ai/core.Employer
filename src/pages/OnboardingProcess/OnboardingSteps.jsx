@@ -8,11 +8,13 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  InputAdornment,
+  Snackbar,
 } from "@mui/material";
-import axios from "axios";
+import CheckIcon from "@mui/icons-material/Check";
+import MuiAlert from "@mui/material/Alert";
 
 const OnboardingSteps = ({ data, step, updateOnboarding }) => {
-
   const [formData, setFormData] = useState({
     fullName: data?.fullName,
     contactInformation: "",
@@ -20,15 +22,13 @@ const OnboardingSteps = ({ data, step, updateOnboarding }) => {
     jobTitle: "",
     department: "",
     startDate: "",
-    documentFiles: {
-      employmentContract: null,
-      nda: null,
-      taxForms: null,
-      panCard: null,
-      aadharCard: null,
-      salarySlip: null,
-      bankStatement: null,
-    },
+    employmentContract: null,
+    nda: null,
+    taxForms: null,
+    panCard: null,
+    aadharCard: null,
+    salarySlip: null,
+    bankStatement: null,
     emailAccount: "",
     softwareAccess: "",
     orientationSchedule: null,
@@ -38,6 +38,18 @@ const OnboardingSteps = ({ data, step, updateOnboarding }) => {
     employeeHandbook: null,
     offerLetterTemplate: "",
   });
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  // List of fields to disable
+  const disabledFields = [
+    "fullName",
+    "contactInformation",
+    "residentialAddress",
+    "aadharCard",
+    "panCard",
+    "salarySlip",
+    "bankStatement",
+  ];
 
   const formFields = {
     "Personal Information": [
@@ -126,47 +138,41 @@ const OnboardingSteps = ({ data, step, updateOnboarding }) => {
     }));
   };
 
-  // Handle file input changes
   const handleFileChange = (event, fieldName) => {
-    // console.log(fieldName,event.target.files[0]);
     setFormData((prevData) => ({
       ...prevData,
-      documentFiles: {
-        ...prevData.documentFiles,
-        [fieldName]: event.target.files[0],
-      },
+      [fieldName]: event.target.files[0],
     }));
   };
 
-  // Handle form submission (save data)
   const handleSave = async () => {
     const formDataToSend = new FormData();
-    // Append regular fields
-    formDataToSend.append("fullName", formData.fullName);
-    formDataToSend.append("contactInformation", formData.contactInformation);
-    formDataToSend.append("residentialAddress", formData.residentialAddress);
-    formDataToSend.append("jobTitle", formData.jobTitle);
-    formDataToSend.append("department", formData.department);
-    formDataToSend.append("startDate", formData.startDate);
-    formDataToSend.append("emailAccount", formData.emailAccount);
-    formDataToSend.append("softwareAccess", formData.softwareAccess);
-    formDataToSend.append("teamIntroduction", formData.teamIntroduction);
-    formDataToSend.append("reportingStructure", formData.reportingStructure);
-    formDataToSend.append("offerLetterTemplate", formData.offerLetterTemplate);
-
-    // Append document files
-    Object.keys(formData.documentFiles).forEach((key) => {
-      if (formData.documentFiles[key]) {
-        formDataToSend.append(key, formData.documentFiles[key]);
+    Object.keys(formData).forEach((key) => {
+      if (formData[key]) {
+        formDataToSend.append(key, formData[key]);
       }
     });
-    // updateOnboarding(formData);
+    console.log(formDataToSend);
+    updateOnboarding(formDataToSend);
+  };
+
+  const handleFieldClick = (fieldName) => {
+    if (disabledFields.includes(fieldName)) {
+      setSnackbarOpen(true);
+    }
   };
 
   const renderForm = () => {
     const fields = formFields[step] || [];
 
     return fields.map((field) => {
+      let isFilled =
+        data[field.name] !== undefined &&
+        data[field.name] !== null &&
+        data[field.name].trim() !== "";
+
+      const isDisabled = disabledFields.includes(field.name);
+
       if (field.type === "text" || field.type === "date") {
         return (
           <TextField
@@ -174,13 +180,22 @@ const OnboardingSteps = ({ data, step, updateOnboarding }) => {
             name={field.name}
             label={field.label}
             type={field.type}
-            value={formData[field.name]}
+            value={formData[field.name] || data?.[field.name]}
             onChange={handleChange}
             fullWidth
             margin="normal"
             InputLabelProps={
               field.type === "date" ? { shrink: true } : undefined
             }
+            InputProps={{
+              endAdornment: isFilled && (
+                <InputAdornment position="end">
+                  <CheckIcon color="success" />
+                </InputAdornment>
+              ),
+              readOnly: isDisabled,
+              onClick: () => handleFieldClick(field.name),
+            }}
           />
         );
       }
@@ -188,7 +203,10 @@ const OnboardingSteps = ({ data, step, updateOnboarding }) => {
       if (field.type === "file") {
         return (
           <Box key={field.name} mb={2}>
-            <Typography>{field.label}</Typography>
+            <Typography onClick={() => handleFieldClick(field.name)}>
+              {field.label}
+              {isFilled && <CheckIcon color="success" />}
+            </Typography>
             <Button variant="contained" component="label">
               Upload {field.label}
               <input
@@ -209,6 +227,8 @@ const OnboardingSteps = ({ data, step, updateOnboarding }) => {
               name={field.name}
               value={formData[field.name]}
               onChange={handleChange}
+              onClick={() => handleFieldClick(field.name)}
+              disabled={isDisabled} // Disable the select field if it's filled
             >
               {field.options.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -237,6 +257,20 @@ const OnboardingSteps = ({ data, step, updateOnboarding }) => {
           </Button>
         </Box>
       </Box>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <MuiAlert
+          onClose={() => setSnackbarOpen(false)}
+          severity="error"
+          elevation={6}
+          variant="filled"
+        >
+          You can't edit this field!
+        </MuiAlert>
+      </Snackbar>
     </Box>
   );
 };

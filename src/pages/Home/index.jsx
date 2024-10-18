@@ -6,29 +6,22 @@ import RecentJobPost from "./RecentJobPost";
 import UpcomingInterview from "./UpcomingInterview";
 import { GetApi, PutApi } from "Api/Api_Calling";
 import { useNavigate } from "react-router-dom";
-// for importing modal
 import Modal from "react-modal";
 import { toast } from "react-toastify";
 Modal.setAppElement("#root");
 
 const DashboardThirteenPage = () => {
   const navigate = useNavigate();
-  // State for managing visibility of each modal
   const [modalIsOpen1, setModalIsOpen1] = useState(false);
   const [modalIsOpen2, setModalIsOpen2] = useState(false);
   const [modalIsOpen3, setModalIsOpen3] = useState(false);
   const [modalIsOpen4, setModalIsOpen4] = useState(false);
-
-  // Handlers to open and close modals
   const openModal1 = () => setModalIsOpen1(true);
   const closeModal1 = () => setModalIsOpen1(false);
-
   const openModal2 = () => setModalIsOpen2(true);
   const closeModal2 = () => setModalIsOpen2(false);
-
   const openModal3 = () => setModalIsOpen3(true);
   const closeModal3 = () => setModalIsOpen3(false);
-
   const openModal4 = () => setModalIsOpen4(true);
   const closeModal4 = () => setModalIsOpen4(false);
 

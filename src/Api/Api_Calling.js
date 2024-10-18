@@ -1,5 +1,5 @@
 import axios from "axios";
-const Api_Url = process.env.REACT_APP_BACKEND_URL
+const Api_Url = process.env.REACT_APP_BACKEND_URL;
 
 const checkToken = (message) => {
   if (message === "Unauthorized") {
@@ -36,6 +36,31 @@ const PutApi = async (apiEndpoint, data) => {
         Authorization: `Bearer ${authToken}`,
       },
     });
+    checkToken(response.data.message);
+    return response;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
+const PutApiFormData = async (apiEndpoint, data) => {
+  try {
+    const authToken = localStorage.getItem("companyToken");
+    const formData = data instanceof FormData ? data : new FormData();
+    if (!(data instanceof FormData)) {
+      Object.keys(data).forEach((key) => {
+        formData.append(key, data[key]);
+      });
+    }
+    const response = await axios.put(`${Api_Url}${apiEndpoint}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Accept: "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+
     checkToken(response.data.message);
     return response;
   } catch (error) {
@@ -107,4 +132,12 @@ const PostApi = async (apiEndpoint, postData) => {
   }
 };
 
-export { GetApi, PutApi, GetApiwithouttoken, DeleteApi, PostApi, Api_Url };
+export {
+  GetApi,
+  PutApi,
+  PutApiFormData,
+  GetApiwithouttoken,
+  DeleteApi,
+  PostApi,
+  Api_Url,
+};

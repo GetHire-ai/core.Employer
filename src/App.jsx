@@ -54,13 +54,14 @@ import EditProfile from "pages/Thirtytwo/EditProfile";
 import Notification from "pages/Notification/Notification";
 import { JobsSettings } from "pages/Jobs/JobsLinks";
 import OnboardingProcess from "pages/OnboardingProcess/OnboardingProcess";
+import OnboardCandidate from "pages/OnboardingProcess";
 const Home = React.lazy(() => import("pages/Home"));
+const OnBoarding = React.lazy(() => import("pages/OnBoarding"));
 const DashboardOne = React.lazy(() => import("pages/DashboardOne"));
 const DashboardTwo = React.lazy(() => import("pages/ApplicationManager"));
 const Dashboard = React.lazy(() => import("pages/JobsDashboard"));
 const Twentytwo = React.lazy(() => import("pages/Twentytwo"));
 const Twentythree = React.lazy(() => import("pages/Twentythree"));
-const OnBoarding = React.lazy(() => import("pages/OnBoarding"));
 const Thirtytwo = React.lazy(() => import("pages/Thirtytwo"));
 const Thirtythree = React.lazy(() => import("pages/Thirtythree"));
 const Thirtyfour = React.lazy(() => import("pages/Thirtyfour"));
@@ -194,6 +195,7 @@ const ProjectRoutes = () => {
                   element={<Twentythree />}
                 />
                 <Route path="/onboarding" element={<OnBoarding />} />
+                <Route path="/onboard-candidate" element={<OnboardCandidate />} />
                 <Route
                   path="/onboarding-process"
                   element={<OnboardingProcess />}
