@@ -60,7 +60,7 @@ const OnBoarding = React.lazy(() => import("pages/OnBoarding"));
 const DashboardOne = React.lazy(() => import("pages/DashboardOne"));
 const DashboardTwo = React.lazy(() => import("pages/ApplicationManager"));
 const Dashboard = React.lazy(() => import("pages/JobsDashboard"));
-const Twentytwo = React.lazy(() => import("pages/Twentytwo"));
+const Interviews = React.lazy(() => import("pages/Interviews"));
 const Twentythree = React.lazy(() => import("pages/Twentythree"));
 const Thirtytwo = React.lazy(() => import("pages/Thirtytwo"));
 const Thirtythree = React.lazy(() => import("pages/Thirtythree"));
@@ -188,14 +188,17 @@ const ProjectRoutes = () => {
                   path="/jobPrestigeStudentReport"
                   element={<JobPrestigeStudentReport />}
                 />
-                <Route path="/interviews" element={<Twentytwo />} />
+                <Route path="/interviews" element={<Interviews />} />
                 <Route path="/community" element={<Community />} />
                 <Route
                   path="/interviews-application"
                   element={<Twentythree />}
                 />
                 <Route path="/onboarding" element={<OnBoarding />} />
-                <Route path="/onboard-candidate" element={<OnboardCandidate />} />
+                <Route
+                  path="/onboard-candidate"
+                  element={<OnboardCandidate />}
+                />
                 <Route
                   path="/onboarding-process"
                   element={<OnboardingProcess />}

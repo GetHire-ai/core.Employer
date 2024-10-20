@@ -4,6 +4,7 @@ import { Text } from "components";
 import "react-circular-progressbar/dist/styles.css";
 import { GetApi, PostApi } from "Api/Api_Calling";
 import JobSidebar from "pages/Jobs/JobsApplication/JobSidebar";
+import { toast } from "react-toastify";
 
 const TwentytwoPage = () => {
   const [AllShortlistedStudents, setAllShortlistedStudents] = useState([]);
@@ -97,16 +98,17 @@ const TwentytwoPage = () => {
       const res = await GetApi(
         `api/CompanyRoutes/selectAndAddStudentToTeam/${data._id}`
       );
-      if (res.ok) {
-        alert("Candidate Selected for job successfully !");
-        GetAllShortlistedStudents();
-        GetAllinterviewSchedule();
-        GetAllapplicationonhold();
-        GetAllSelectedStudents();
-        GetAllJobs();
-      }
+
+      toast.success("Candidate Selected for job successfully !", {
+        autoClose: 1000,
+      });
+      GetAllShortlistedStudents();
+      GetAllinterviewSchedule();
+      GetAllapplicationonhold();
+      GetAllSelectedStudents();
+      GetAllJobs();
     } catch (error) {
-      alert("Error in Selected for job !");
+      toast.error("Error in Selected for job !", { autoClose: 1000 });
       console.log(error);
     }
   };

@@ -18,7 +18,6 @@ const TwentysixPage = () => {
   const [AllSelectedStudents, setAllSelectedStudents] = useState([]);
   const [AllJobs, setAllJobs] = useState([]);
   const [Fulldata, setFulldata] = useState([]);
-  const [selectedfiled, setSelectedfiled] = useState("Ongoing");
 
   const toggleDrawer = (open) => (event) => {
     if (
@@ -83,6 +82,7 @@ const TwentysixPage = () => {
         "api/CompanyRoutes/GetAllSelectedStudents"
       );
       setAllSelectedStudents(Getalljobs?.data?.data);
+      setFulldata(Getalljobs?.data?.data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -112,26 +112,6 @@ const TwentysixPage = () => {
     GetAllJobs();
   }, []);
 
-  const selectfield = (Name) => {
-    setSelectedfiled(Name);
-  };
-
-  useEffect(() => {
-    setFulldata(AllinterviewSchedule);
-  }, [AllinterviewSchedule]);
-
-  useEffect(() => {
-    if (selectedfiled === "Ongoing") {
-      setFulldata(AllinterviewSchedule);
-    }
-    if (selectedfiled === "On_Hold") {
-      setFulldata(AllShortlistedStudents);
-    }
-    if (selectedfiled === "Completed") {
-      setFulldata(AllSelectedStudents);
-    }
-  }, [selectedfiled]);
-
   const formatTimestamp = (timestampString) => {
     const timestamp = new Date(timestampString);
     const options = {
@@ -156,7 +136,7 @@ const TwentysixPage = () => {
         <LinearProgress />
       ) : (
         <>
-          <div className="bg-gray-100 flex flex-col justify-center items-center font-[Poppins] w-full">
+          <div className="bg-gray-100 flex flex-col justify-center items-center font-[Poppins] w-full ">
             <div className="flex p-[16px] w-full">
               <Text
                 className="text-[24px] text-black"
@@ -285,47 +265,7 @@ const TwentysixPage = () => {
             </div>
             <div className="w-full p-[16px] flex-col md:flex-row justify-center items-center lg:items-start lg:justify-start flex  gap-[25px]">
               <h1 className="text-[24px] font-[500]">Onboarding Manager</h1>
-              <div className="gap-6 flex flex-col lg:flex-row w-full lg:w-fit">
-                <button
-                  onClick={() => {
-                    selectfield("Ongoing");
-                  }}
-                  className={`w-[111px] h-[40px] rounded-[8px] text-14 font-semibold ${
-                    selectedfiled === "Ongoing"
-                      ? "bg-slate-400 text-blue-900 "
-                      : "bg-white text-black hover:shadow-2xl hover:text-blue-800 hover:scale-105 hover:bg-slate-300 duration-300 "
-                  }`}
-                >
-                  {" "}
-                  Ongoing
-                </button>
-                <button
-                  onClick={() => {
-                    selectfield("On_Hold");
-                  }}
-                  className={`w-[111px] h-[40px] rounded-[8px] text-14 font-semibold ${
-                    selectedfiled === "On_Hold"
-                      ? "bg-slate-400 text-blue-900"
-                      : "bg-white text-black hover:shadow-2xl hover:text-blue-800 hover:scale-105 hover:bg-slate-300 duration-300"
-                  }`}
-                >
-                  {" "}
-                  On Hold{" "}
-                </button>
-                <button
-                  onClick={() => {
-                    selectfield("Completed");
-                  }}
-                  className={`w-[111px] h-[40px] rounded-[8px] text-14 font-semibold ${
-                    selectedfiled === "Completed"
-                      ? "bg-slate-400 text-blue-900"
-                      : "bg-white text-black hover:shadow-2xl  hover:text-blue-800 hover:scale-105 hover:bg-slate-300 duration-300"
-                  }`}
-                >
-                  {" "}
-                  Completed{" "}
-                </button>
-              </div>
+              <div className="gap-6 flex flex-col lg:flex-row w-full lg:w-fit"></div>
               <button
                 onClick={() => {
                   navigate("/onboarding-process");
@@ -353,7 +293,7 @@ const TwentysixPage = () => {
                       <th className="font-[500] text-left p-2">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="text-[12px] bg-[#fff] font-[500] text-center">
+                  <tbody className="text-[12px] bg-[#fff] font-[500] text-center ">
                     {Fulldata?.map((interviewInProcess, index) => (
                       <tr
                         key={index}
