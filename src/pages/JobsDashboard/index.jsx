@@ -88,13 +88,37 @@ const DashboardPage = () => {
   const shareLinkedin = async (id) => {
     try {
       const res = await PostApi(`api/CompanyRoutes/share-linkedin/${id}`, {});
-      console.log(res);
+      console.log(res?.data);
       toast.success("posted on linkedin", { autoClose: 1000 });
       setloading(false);
     } catch (error) {
       setloading(false);
-      console.log(error);
+      console.log(error.response);
       toast.error("error in post on linkedin", { autoClose: 1000 });
+    }
+  };
+  const shareFB = async (id) => {
+    try {
+      const res = await PostApi(`api/CompanyRoutes/share-fb/${id}`, {});
+      console.log(res?.data);
+      toast.success("posted on linkedin", { autoClose: 1000 });
+      setloading(false);
+    } catch (error) {
+      setloading(false);
+      console.log(error.response);
+      toast.error("error in post on FB", { autoClose: 1000 });
+    }
+  };
+  const shareThreads = async (id) => {
+    try {
+      const res = await PostApi(`api/CompanyRoutes/share-threads/${id}`, {});
+      console.log(res?.data);
+      toast.success("posted on linkedin", { autoClose: 1000 });
+      setloading(false);
+    } catch (error) {
+      setloading(false);
+      console.log(error.response);
+      toast.error("error in post on Threads", { autoClose: 1000 });
     }
   };
 
@@ -265,10 +289,32 @@ const DashboardPage = () => {
                     >
                       <i className="fa-brands fa-linkedin"></i>
                     </button>
-                    <button className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300">
+                    <button
+                      className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300"
+                      onClick={() => {
+                        if (job?.postedFB) {
+                          toast.error("Job is already Posted on linkedin", {
+                            autoClose: 1000,
+                          });
+                        } else {
+                          shareFB(job?._id);
+                        }
+                      }}
+                    >
                       <i className="fa-brands fa-facebook"></i>
                     </button>
-                    <button className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300">
+                    <button
+                      className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300"
+                      onClick={() => {
+                        if (job?.postedThreads) {
+                          toast.error("Job is already Posted on linkedin", {
+                            autoClose: 1000,
+                          });
+                        } else {
+                          shareThreads(job?._id);
+                        }
+                      }}
+                    >
                       <i className="fa-brands fa-twitter"></i>
                     </button>
                     <button
