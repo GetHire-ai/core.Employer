@@ -320,10 +320,10 @@ const JobDetails = ({
             onChange={(event, newValue) => {
               setJobData((prev) => ({
                 ...prev,
-                location: newValue || "", // Use the selected value or empty string
+                location: newValue || "",
               }));
             }}
-            freeSolo // Allow custom input
+            freeSolo
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -341,7 +341,7 @@ const JobDetails = ({
                 InputProps={{
                   ...params.InputProps,
                   className:
-                    "bg-white border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+                    "bg-white border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm h-[2.5rem]",
                 }}
               />
             )}
