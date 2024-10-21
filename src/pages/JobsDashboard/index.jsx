@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Img, Text } from "components";
 import { useNavigate, Link } from "react-router-dom";
 import { GetApi, DeleteApi, PostApi } from "Api/Api_Calling";
@@ -14,6 +14,7 @@ import {
   Alert,
 } from "@mui/material";
 import CopyAllIcon from "@mui/icons-material/CopyAll";
+import html2canvas from "html2canvas";
 import { toast } from "react-toastify";
 
 const DashboardPage = () => {
@@ -26,10 +27,26 @@ const DashboardPage = () => {
   const [AllJobs, setAllJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [link, setlink] = useState("");
+  const [selectedJob, setSelectedJob] = useState(null);
   const [loading, setloading] = useState(true);
   let company = JSON.parse(localStorage.getItem("companydata"));
   const [activeTab, setActiveTab] = useState("Active Jobs");
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const downloadRef = useRef(null);
+
+  const handleDownload = () => {
+    if (downloadRef.current) {
+      html2canvas(downloadRef.current).then((canvas) => {
+        const pngUrl = canvas.toDataURL("image/png");
+        const downloadLink = document.createElement("a");
+        downloadLink.href = pngUrl;
+        downloadLink.download = "job-details-qr-code.png";
+        downloadLink.click();
+      });
+    } else {
+      console.error("Job details element not found");
+    }
+  };
 
   const handleCopyClick = () => {
     navigator.clipboard
@@ -61,13 +78,15 @@ const DashboardPage = () => {
   const handleButtonClick = (index) => {
     setOpenIndex(index === openIndex ? null : index);
   };
-  const handleToggle = (id) => {
-    setLinkModal(!linkModal);
-    setlink(`https://get-hire-student.vercel.app/blank/JobViewDetails/${id}`);
-    // if (null) {
-    // } else {
-    //   setlink(null);
-    // }
+  const handleToggle = (id, job) => {
+    if (selectedJob === null) {
+      setLinkModal(!linkModal);
+      setlink(`https://get-hire-student.vercel.app/blank/JobViewDetails/${id}`);
+      setSelectedJob(job);
+    } else {
+      setSelectedJob(null);
+      setlink(null);
+    }
   };
 
   const GetAllJobs = async () => {
@@ -319,13 +338,13 @@ const DashboardPage = () => {
                     </button>
                     <button
                       className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300"
-                      onClick={() => handleToggle(job._id)}
+                      onClick={() => handleToggle(job._id, job)}
                     >
                       <i className="fa-solid fa-link"></i>
                     </button>
                     <button
                       className="text-gray-500 hover:text-blue-600 hover:scale-150 transition-transform duration-300"
-                      onClick={() => handleToggle(job._id)}
+                      onClick={() => handleToggle(job._id, job)}
                     >
                       <i className="fa-solid fa-qrcode"></i>
                     </button>
@@ -480,7 +499,7 @@ const DashboardPage = () => {
             transform: "translate(-50%, -50%)",
             width: 400,
             bgcolor: "background.paper",
-            border: "1px transperent #000",
+            border: "1px solid transparent",
             borderRadius: "10px",
             boxShadow: 24,
             p: 4,
@@ -489,43 +508,36 @@ const DashboardPage = () => {
             alignItems: "center",
           }}
         >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Share this Job
-          </Typography>
-          <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
-            <Typography
-              id="modal-modal-description"
-              sx={{ flex: 1, overflowWrap: "break-word" }}
-              className="text-xs"
-            >
-              {link}
+          <div ref={downloadRef}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              {selectedJob?.positionName}
             </Typography>
-            <IconButton onClick={handleCopyClick} sx={{ ml: 2 }}>
-              <CopyAllIcon />
-            </IconButton>
-          </Box>
 
-          <div className="flex gap-4 mt-3">
-            <div>
-              {/* <h2>Your QR Code</h2> */}
-              {link && <QRCodeSVG value={link} />}
-            </div>
-            {/* <button>
-              <i className="fa-brands fa-linkedin text-gray-500"></i>
-            </button>
-            <button>
-              <i className="fa-brands fa-facebook text-gray-500"></i>
-            </button>
-            <button>
-              <i className="fa-brands fa-twitter text-gray-500"></i>
-            </button>
-            <button>
-              <i className="fa-solid fa-link text-gray-500"></i>
-            </button>
-            <button>
-              <i className="fa-solid fa-qrcode"></i>
-            </button> */}
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="body1">
+                <strong>Company Name:</strong> {selectedJob?.companyName}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Salary:</strong> {selectedJob?.minSalary / 100000} LPA -{" "}
+                {selectedJob?.maxSalary / 100000} LPA
+              </Typography>
+              <Typography variant="body1">
+                <strong>Experience:</strong> {selectedJob?.minExp} -{" "}
+                {selectedJob?.maxExp} years
+              </Typography>
+              <Typography variant="body1">
+                <strong>Location:</strong> {selectedJob?.location}
+              </Typography>
+            </Box>
+
+            <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+              <QRCodeSVG value={link} />
+            </Box>
           </div>
+
+          <Button variant="contained" onClick={handleDownload} sx={{ mt: 2 }}>
+            Download Job Details & QR Code
+          </Button>
         </Box>
       </Modal>
       <Snackbar
