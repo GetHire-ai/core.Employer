@@ -1,6 +1,8 @@
-import { TextField } from "@mui/material";
+import { Autocomplete } from "@mui/material";
+import TextField from "@mui/material/TextField";
 import { Button } from "components";
 import React from "react";
+const citySuggestions = ["Mumbai", "Indore", "Pune", "Banglore", "Delhi"];
 
 const JobDetails = ({
   companydata,
@@ -35,8 +37,6 @@ const JobDetails = ({
   suggestions,
   SkillLoading,
   handleCityInputChange,
-  citySuggestions,
-  setCitySuggestions,
   salaryOptions,
   addSkill,
   removeSkill,
@@ -309,44 +309,45 @@ const JobDetails = ({
           </select>
         </div>
       )}
-
       {JobData.jobType !== "remote" && (
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
             City<span className="text-red-600 text-md ml-1">*</span>
           </label>
-          <input
-            value={JobData.location}
-            name="location"
-            type="text"
-            className={`mt-1 block w-full px-3 py-2 bg-white border hover:shadow-xl border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
-              formSubmitted && JobData.location === "" ? "border-red-500" : ""
-            }`}
-            placeholder="Enter city name"
-            onChange={handleCityInputChange}
+          <Autocomplete
+            options={citySuggestions}
+            getOptionLabel={(option) => option}
+            onChange={(event, newValue) => {
+              setJobData((prev) => ({
+                ...prev,
+                location: newValue || "", // Use the selected value or empty string
+              }));
+            }}
+            freeSolo // Allow custom input
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                placeholder="Enter city name"
+                error={formSubmitted && JobData.location === ""}
+                helperText={
+                  formSubmitted && JobData.location === "" ? "Required" : ""
+                }
+                className={`mt-1 ${
+                  formSubmitted && JobData.location === ""
+                    ? "border-red-500"
+                    : ""
+                }`}
+                InputProps={{
+                  ...params.InputProps,
+                  className:
+                    "bg-white border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+                }}
+              />
+            )}
           />
-          {citySuggestions.length > 0 && (
-            <ul className="bg-white border border-gray-300 rounded-md mt-2 max-h-60 overflow-y-auto">
-              {citySuggestions.map((city, index) => (
-                <li
-                  key={index}
-                  className="p-2 cursor-pointer hover:bg-gray-200"
-                  onClick={() => {
-                    setJobData((prev) => ({
-                      ...prev,
-                      location: city.matching_full_name,
-                    }));
-                    setCitySuggestions([]);
-                  }}
-                >
-                  {city.matching_full_name}
-                </li>
-              ))}
-            </ul>
-          )}
         </div>
       )}
-
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700">
           Part-time/Full-time{" "}
@@ -393,7 +394,6 @@ const JobDetails = ({
           {JobData?.shift === "" && formSubmitted && "Please Select"}
         </span>
       </div>
-
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-4">
           <div className="flex-1">
@@ -411,7 +411,6 @@ const JobDetails = ({
                       onChange={(event) => {
                         const newValue = event.target.value;
                         setMinExp(newValue);
-                        // Update JobData and ensure maxExp is valid
                         handleChange({
                           target: { name: "minExp", value: newValue },
                         });
